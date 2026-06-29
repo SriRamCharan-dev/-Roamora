@@ -12,6 +12,7 @@ const flash = require('connect-flash');
 const ExpressError = require('./utils/ExpressError');
 const listingRouter = require('./routes/listing');
 const reviewRoute = require('./routes/review');
+const userRouter = require('./routes/user');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
@@ -72,11 +73,9 @@ app.get('/admin', (req, res, next) => {
   throw new ExpressError(402, 'Access forbidden');
 });
 
-app.get('/', (req, res) => {
-  res.redirect('/listings');
-});
 app.use('/listings', listingRouter);
 app.use('/listings/:id/reviews', reviewRoute);
+app.use('/', userRouter);
 
 app.use('*', (req, res, next) => {
   next(new ExpressError(404, 'Page not found'));
