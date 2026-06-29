@@ -14,6 +14,7 @@ const listingRouter = require('./routes/listing');
 const reviewRoute = require('./routes/review');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
+const LocalStrategy = require('passport-local');
 const passportLocalMongoose = require('passport-local-mongoose');
 const User = require('./models/user');
 
