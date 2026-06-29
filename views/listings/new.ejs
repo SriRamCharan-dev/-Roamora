@@ -1,0 +1,159 @@
+<% layout('layouts/boilerplate') %>
+
+<section class="page-section">
+    <div class="container-shell form-shell">
+        <div class="form-panel">
+            <div class="form-hero">
+                <div class="form-copy-card">
+                    <div class="hero-badge"><i class="fa-solid fa-house-circle-check"></i> Host setup</div>
+                    <h1>Publish a stay that looks ready to book.</h1>
+                    <p class="muted-copy">The form now feels cleaner, more premium, and easier to complete. Add a compelling title, a helpful description, and the basics guests care about first.</p>
+                </div>
+                <div class="form-tip-card">
+                    <h2 class="section-heading" style="font-size:1.45rem;">What makes a strong listing</h2>
+                    <p class="muted-copy">Use a clear place name, a warm summary, an inviting image, and a realistic nightly price. Small clarity upgrades here improve the whole browsing experience.</p>
+                </div>
+            </div>
+
+            <form id="listingForm" method="POST" class="needs-validation" novalidate action="/listings">
+                <div class="form-grid">
+                    <div class="field-group full-span">
+                        <label for="title">Title <span class="required-mark">*</span></label>
+                        <input type="text" id="title" name="title" required placeholder="Enter a catchy title" class="form-control" minlength="5" maxlength="100">
+                        <div class="invalid-feedback" id="titleError">Title must be between 5 and 100 characters.</div>
+                        <div class="valid-feedback">Looks good.</div>
+                        <div class="field-help">Keep it short, memorable, and location-aware.</div>
+                    </div>
+
+                    <div class="field-group full-span">
+                        <label for="description">Description <span class="required-mark">*</span></label>
+                        <textarea id="description" name="description" required placeholder="Describe what makes this place special" class="form-control form-textarea" minlength="10" maxlength="5000" rows="6"></textarea>
+                        <div class="invalid-feedback" id="descriptionError">Description must be between 10 and 5000 characters.</div>
+                        <div class="valid-feedback">Looks good.</div>
+                        <div class="field-help">Mention the mood, standout features, and the type of guest it suits best.</div>
+                    </div>
+
+                    <div class="field-group full-span">
+                        <label for="image">Image URL</label>
+                        <input type="url" id="image" name="image" placeholder="https://example.com/your-listing-photo.jpg" class="form-control" maxlength="500">
+                        <div class="invalid-feedback" id="imageError">Please provide a valid URL starting with http:// or https://</div>
+                        <div class="valid-feedback">Looks good.</div>
+                        <div class="field-help">Use a bright, high-quality image that instantly explains the space.</div>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="price">Price per night <span class="required-mark">*</span></label>
+                        <input type="number" id="price" name="price" required placeholder="Price in INR" min="1" max="999999" step="0.01" class="form-control">
+                        <div class="invalid-feedback" id="priceError">Price must be between 1 and 999999.</div>
+                        <div class="valid-feedback">Looks good.</div>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="location">Location <span class="required-mark">*</span></label>
+                        <input type="text" id="location" name="location" required placeholder="Goa, Kyoto, Paris" class="form-control" minlength="3" maxlength="100">
+                        <div class="invalid-feedback" id="locationError">Location must be between 3 and 100 characters.</div>
+                        <div class="valid-feedback">Looks good.</div>
+                    </div>
+
+                    <div class="field-group full-span">
+                        <label for="country">Country <span class="required-mark">*</span></label>
+                        <input type="text" id="country" name="country" required placeholder="India, Japan, France" class="form-control" minlength="2" maxlength="100">
+                        <div class="invalid-feedback" id="countryError">Country must be between 2 and 100 characters.</div>
+                        <div class="valid-feedback">Looks good.</div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <span class="muted-copy">Required fields help keep listings complete and easier to trust.</span>
+                    <button class="btn-primary" type="submit">Create listing</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+(() => {
+  'use strict'
+
+  const forms = document.querySelectorAll('.needs-validation')
+
+  const validationRules = {
+    title: {
+      validate: (value) => value.trim().length >= 5 && value.trim().length <= 100,
+      errorMessage: 'Title must be between 5 and 100 characters.'
+    },
+    description: {
+      validate: (value) => value.trim().length >= 10 && value.trim().length <= 5000,
+      errorMessage: 'Description must be between 10 and 5000 characters.'
+    },
+    image: {
+      validate: (value) => value === '' || /^https?:\/\/.+/.test(value),
+      errorMessage: 'Image URL must start with http:// or https://'
+    },
+    price: {
+      validate: (value) => {
+        const num = parseFloat(value)
+        return !isNaN(num) && num > 0 && num <= 999999
+      },
+      errorMessage: 'Price must be between 1 and 999999.'
+    },
+    location: {
+      validate: (value) => value.trim().length >= 3 && value.trim().length <= 100,
+      errorMessage: 'Location must be between 3 and 100 characters.'
+    },
+    country: {
+      validate: (value) => value.trim().length >= 2 && value.trim().length <= 100,
+      errorMessage: 'Country must be between 2 and 100 characters.'
+    }
+  }
+
+  Object.keys(validationRules).forEach((fieldName) => {
+    const field = document.getElementById(fieldName)
+    if (!field) return
+
+    const validate = () => validateField(fieldName, field)
+    field.addEventListener('blur', validate)
+    field.addEventListener('input', validate)
+  })
+
+  function validateField(fieldName, field) {
+    const rule = validationRules[fieldName]
+    const isValid = rule.validate(field.value)
+    const errorElement = document.getElementById(`${fieldName}Error`)
+
+    field.classList.toggle('is-valid', isValid)
+    field.classList.toggle('is-invalid', !isValid)
+
+    if (errorElement && !isValid) {
+      errorElement.textContent = rule.errorMessage
+    }
+  }
+
+  Array.from(forms).forEach((form) => {
+    form.addEventListener('submit', (event) => {
+      let isValid = true
+
+      Object.keys(validationRules).forEach((fieldName) => {
+        const field = document.getElementById(fieldName)
+        if (!field) return
+
+        const passes = validationRules[fieldName].validate(field.value)
+        field.classList.toggle('is-valid', passes)
+        field.classList.toggle('is-invalid', !passes)
+
+        if (!passes) {
+          isValid = false
+        }
+      })
+
+      if (!isValid) {
+        event.preventDefault()
+        event.stopPropagation()
+      }
+
+      form.classList.add('was-validated')
+    }, false)
+  })
+})()
+</script>

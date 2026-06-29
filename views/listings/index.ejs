@@ -1,0 +1,90 @@
+<% layout('layouts/boilerplate') %>
+<section class="page-section">
+    <div class="container-shell">
+        <div class="hero-panel">
+            <div class="hero-copy">
+                <div class="hero-badge"><i class="fa-solid fa-location-arrow"></i> Handpicked stays for every mood</div>
+                <h1>Find the kind of place that changes the whole trip.</h1>
+                <p>Browse standout homes, warm escapes, and design-forward stays that make planning feel easy and the destination feel even better.</p>
+                <div class="hero-actions">
+                    <a href="#listing-grid" class="btn-primary"><i class="fa-solid fa-compass"></i> Explore listings</a>
+                    <a href="/listings/new" class="btn-secondary"><i class="fa-solid fa-house-circle-check"></i> Add your property</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-badge"><i class="fa-solid fa-sparkles"></i> Curated experience</div>
+                <div class="hero-metrics">
+                    <div class="metric-card">
+                        <strong><%= listings.length %>+</strong>
+                        <span>Unique stays</span>
+                    </div>
+                    <div class="metric-card">
+                        <strong>4.8</strong>
+                        <span>Guest feel</span>
+                    </div>
+                    <div class="metric-card">
+                        <strong>24/7</strong>
+                        <span>Booking ready</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-strip">
+            <div class="stat-pill">
+                <strong>Design-led homes</strong>
+                <span>Spaces that feel intentional, not generic.</span>
+            </div>
+            <div class="stat-pill">
+                <strong>Flexible picks</strong>
+                <span>From quiet weekends to long city stays.</span>
+            </div>
+            <div class="stat-pill">
+                <strong>Instant inspiration</strong>
+                <span>Clear visuals and faster decisions.</span>
+            </div>
+            <div class="stat-pill">
+                <strong>Host-ready platform</strong>
+                <span>Publish and manage your listing with ease.</span>
+            </div>
+        </div>
+
+        <div class="listing-toolbar">
+            <div>
+                <h2 class="section-heading">Featured destinations</h2>
+                <p class="section-subtext">A clean browse experience with stronger cards, clearer hierarchy, and a more premium feel.</p>
+            </div>
+            <div class="chip-row">
+                <span class="chip">Beachfront</span>
+                <span class="chip">Mountain air</span>
+                <span class="chip">City lights</span>
+                <span class="chip">Remote work</span>
+            </div>
+        </div>
+
+        <div class="listings-grid" id="listing-grid">
+            <% for(let listing of listings) { %>
+            <a href="/listings/<%= listing._id %>" class="listing-card">
+                <div class="listing-card-media">
+                    <img src="<%= listing.image.url %>" alt="<%= listing.image.alt || listing.title %>" loading="lazy">
+                    <div class="listing-card-badge"><i class="fa-solid fa-star"></i> Guest favorite</div>
+                </div>
+                <div class="listing-card-body">
+                    <div class="listing-card-top">
+                        <div>
+                            <h3 class="listing-card-title"><%= listing.title %></h3>
+                            <div class="listing-card-location"><%= listing.location %>, <%= listing.country %></div>
+                        </div>
+                        <div class="listing-card-rating"><i class="fa-solid fa-star"></i> 4.8</div>
+                    </div>
+                    <div class="listing-card-meta">Thoughtful stay | Instant visual preview | Ideal for short getaways</div>
+                    <div class="listing-card-footer">
+                        <div class="listing-card-price">&#8377;<%= listing.price.toLocaleString("en-IN") %> <span>/ night</span></div>
+                        <span class="btn-ghost">View stay</span>
+                    </div>
+                </div>
+            </a>
+            <% } %>
+        </div>
+    </div>
+</section>

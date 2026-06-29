@@ -1,0 +1,170 @@
+<% layout('layouts/boilerplate') %>
+
+<section class="page-section">
+    <div class="container-shell">
+        <div class="detail-shell">
+            <div class="content-panel">
+                <a href="/listings" class="breadcrumbs"><i class="fa-solid fa-arrow-left"></i> Back to listings</a>
+
+                <div class="detail-media">
+                    <div class="detail-media-main">
+                        <img src="<%= listing.image.url %>" alt="<%= listing.image.alt || listing.title %>">
+                    </div>
+                    <div class="detail-media-stack">
+                        <div class="mini-shot">
+                            <img src="<%= listing.image.url %>" alt="<%= listing.image.alt || listing.title %>">
+                        </div>
+                        <div class="mini-shot">
+                            <img src="<%= listing.image.url %>" alt="<%= listing.image.alt || listing.title %>">
+                        </div>
+                        <div class="mini-shot">
+                            <img src="<%= listing.image.url %>" alt="<%= listing.image.alt || listing.title %>">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-head">
+                    <div>
+                        <h1 class="detail-title"><%= listing.title %></h1>
+                        <div class="detail-location"><i class="fa-solid fa-location-dot"></i> <%= listing.location %>, <%= listing.country %></div>
+                    </div>
+                    <div class="chip-row">
+                        <span class="chip"><i class="fa-solid fa-star"></i> 4.7 guest rating</span>
+                        <span class="chip"><i class="fa-solid fa-bolt"></i> Instant booking feel</span>
+                    </div>
+                </div>
+
+                <p class="detail-blurb"><%= listing.description %></p>
+
+                <div class="detail-tag-row">
+                    <div class="tag-card">
+                        <i class="fa-solid fa-house"></i>
+                        <strong>Private stay</strong>
+                        <span class="muted-copy">A focused, cozy setup for solo trips, couples, or calm group plans.</span>
+                    </div>
+                    <div class="tag-card">
+                        <i class="fa-solid fa-wifi"></i>
+                        <strong>Work-friendly</strong>
+                        <span class="muted-copy">A comfortable home base for quick check-ins, planning, and longer stays.</span>
+                    </div>
+                    <div class="tag-card">
+                        <i class="fa-solid fa-heart"></i>
+                        <strong>Memorable atmosphere</strong>
+                        <span class="muted-copy">Designed to feel warm, polished, and easy to choose at a glance.</span>
+                    </div>
+                </div>
+
+                <h2 class="section-heading">What this stay offers</h2>
+                <div class="offer-grid">
+                    <div class="offer-card"><i class="fa-solid fa-bed"></i> Comfortable sleeping setup</div>
+                    <div class="offer-card"><i class="fa-solid fa-utensils"></i> Space for meals and lounging</div>
+                    <div class="offer-card"><i class="fa-solid fa-camera-retro"></i> Photo-worthy interiors</div>
+                    <div class="offer-card"><i class="fa-solid fa-route"></i> Great launch point for exploring</div>
+                </div>
+
+                <h2 class="section-heading">Guest Reviews</h2>
+                <p class="section-subtext">Clean feedback forms, clearer review cards, and a stronger content rhythm make this page feel much more complete.</p>
+
+                <form action="/listings/<%= listing._id %>/reviews" method="POST" class="needs-validation review-form" novalidate>
+                    <div class="field-group">
+                        <label class="form-label-soft">Your rating</label>
+                        <div class="star-rating">
+                            <input type="radio" id="star5" name="rating" value="5" />
+                            <label for="star5" title="5 stars"><i class="fa-solid fa-star"></i></label>
+                            <input type="radio" id="star4" name="rating" value="4" />
+                            <label for="star4" title="4 stars"><i class="fa-solid fa-star"></i></label>
+                            <input type="radio" id="star3" name="rating" value="3" />
+                            <label for="star3" title="3 stars"><i class="fa-solid fa-star"></i></label>
+                            <input type="radio" id="star2" name="rating" value="2" />
+                            <label for="star2" title="2 stars"><i class="fa-solid fa-star"></i></label>
+                            <input type="radio" id="star1" name="rating" value="1" checked />
+                            <label for="star1" title="1 star"><i class="fa-solid fa-star"></i></label>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label for="comment">Tell future guests what stood out</label>
+                        <textarea id="comment" name="comment" class="form-control form-textarea" rows="4" required placeholder="Share details of your experience at this stay."></textarea>
+                        <div class="invalid-feedback">Please add a short review before submitting.</div>
+                    </div>
+                    <button type="submit" class="btn-primary">Submit review</button>
+                </form>
+
+                <% if (listing.reviews.length > 0) { %>
+                <div class="review-grid">
+                    <% for (let review of listing.reviews) { %>
+                    <div class="review-card">
+                        <h5>Rating: <%= review.rating %> <i class="fa-solid fa-star" style="color:#f2a84a;"></i></h5>
+                        <p><%= review.comment %></p>
+                        <form method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
+                            <button class="btn-danger" type="submit">Delete review</button>
+                        </form>
+                    </div>
+                    <% } %>
+                </div>
+                <% } %>
+            </div>
+
+            <aside class="booking-panel">
+                <div class="booking-panel-top">
+                    <div>
+                        <div class="booking-price">&#8377;<%= listing.price.toLocaleString("en-IN") %> <span>/ night</span></div>
+                        <div class="booking-meta"><i class="fa-solid fa-star"></i> 4.7 average rating</div>
+                    </div>
+                    <span class="chip">Popular pick</span>
+                </div>
+
+                <div class="booking-form-card">
+                    <div class="booking-row">
+                        <div class="booking-field">
+                            <label for="checkin">Check in</label>
+                            <input id="checkin" type="text" placeholder="Add date" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'">
+                        </div>
+                        <div class="booking-field">
+                            <label for="checkout">Check out</label>
+                            <input id="checkout" type="text" placeholder="Add date" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'">
+                        </div>
+                    </div>
+                    <div class="booking-field-full">
+                        <label for="guests">Guests</label>
+                        <select id="guests">
+                            <option>1 guest</option>
+                            <option>2 guests</option>
+                            <option>3 guests</option>
+                            <option>4 guests</option>
+                            <option>5+ guests</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn-primary" type="button" style="width:100%;">Reserve now</button>
+                <p class="section-subtext" style="margin:12px 0 0;">Nothing is charged yet. This panel is here to make the stay feel bookable and complete.</p>
+
+                <div class="price-breakdown">
+                    <div class="price-line"><span>&#8377;<%= listing.price.toLocaleString("en-IN") %> x 2 nights</span><span>&#8377;<%= (listing.price * 2).toLocaleString("en-IN") %></span></div>
+                    <div class="price-line"><span>Service fee</span><span>&#8377;<%= Math.round(listing.price * 0.12).toLocaleString("en-IN") %></span></div>
+                    <div class="price-total"><span>Total before taxes</span><span>&#8377;<%= Math.round((listing.price * 2) + (listing.price * 0.12)).toLocaleString("en-IN") %></span></div>
+                </div>
+
+                <div class="quick-facts">
+                    <div class="fact-card">
+                        <i class="fa-solid fa-broom"></i>
+                        <strong>Clean presentation</strong>
+                        <span class="muted-copy">The UI now highlights quality and trust faster.</span>
+                    </div>
+                    <div class="fact-card">
+                        <i class="fa-solid fa-pen-ruler"></i>
+                        <strong>Sharper hierarchy</strong>
+                        <span class="muted-copy">Pricing, place details, and reviews are easier to scan.</span>
+                    </div>
+                </div>
+
+                <div class="form-actions" style="margin-top:24px;">
+                    <a href="/listings/<%= listing._id %>/edit" class="btn-secondary">Edit listing</a>
+                    <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
+                        <button type="submit" class="btn-danger">Delete listing</button>
+                    </form>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
