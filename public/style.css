@@ -6,14 +6,14 @@
     --brand-sand: #f3ede3;
     --brand-peach: #f5b799;
     --brand-cream: #fffdf8;
-    --surface: rgba(255, 253, 248, 0.9);
+    --surface: rgba(255, 253, 248, 0.95);
     --surface-strong: #ffffff;
-    --surface-tint: #f9f4eb;
+    --surface-tint: #f6efe2;
     --text-main: #1c241f;
-    --text-soft: #5e685f;
-    --border-soft: rgba(24, 50, 42, 0.12);
-    --shadow-soft: 0 20px 50px rgba(24, 50, 42, 0.08);
-    --shadow-card: 0 18px 40px rgba(24, 50, 42, 0.12);
+    --text-soft: #434f45;
+    --border-soft: rgba(24, 50, 42, 0.16);
+    --shadow-soft: 0 20px 50px rgba(24, 50, 42, 0.04);
+    --shadow-card: 0 18px 40px rgba(24, 50, 42, 0.08);
     --radius-xl: 28px;
     --radius-lg: 22px;
     --radius-md: 16px;
@@ -414,7 +414,8 @@ a {
     width: fit-content;
     border-radius: 999px;
     padding: 8px 14px;
-    background: rgba(255, 253, 248, 0.8);
+    background: var(--surface-strong);
+    border: 1px solid var(--border-soft);
     color: var(--brand-ink);
     font-weight: 700;
     font-size: 0.9rem;
@@ -429,7 +430,8 @@ a {
 .metric-card {
     padding: 14px;
     border-radius: 18px;
-    background: rgba(255, 253, 248, 0.76);
+    background: var(--surface-strong);
+    border: 1px solid var(--border-soft);
 }
 
 .metric-card strong {
@@ -483,7 +485,7 @@ a {
 .chip {
     padding: 10px 14px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.72);
+    background: var(--surface-strong);
     border: 1px solid var(--border-soft);
     font-size: 0.9rem;
     font-weight: 600;
@@ -530,7 +532,8 @@ a {
     position: absolute;
     left: 16px;
     bottom: 16px;
-    background: rgba(255, 253, 248, 0.9);
+    background: var(--surface-strong);
+    border: 1px solid var(--border-soft);
     color: var(--brand-ink);
     padding: 8px 12px;
     border-radius: 999px;
@@ -679,7 +682,7 @@ a {
 .review-card {
     border-radius: 20px;
     padding: 18px;
-    background: rgba(255, 255, 255, 0.72);
+    background: var(--surface-strong);
     border: 1px solid var(--border-soft);
 }
 
@@ -740,7 +743,7 @@ a {
 .booking-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    background: rgba(255, 255, 255, 0.7);
+    background: var(--surface-strong);
 }
 
 .booking-field {
@@ -755,7 +758,7 @@ a {
 .booking-field-full {
     padding: 14px 16px;
     border-top: 1px solid var(--border-soft);
-    background: rgba(249, 244, 235, 0.72);
+    background: var(--surface-tint);
 }
 
 .booking-field label,
@@ -775,9 +778,9 @@ a {
 .form-select,
 .form-textarea {
     width: 100%;
-    border: 1px solid rgba(24, 50, 42, 0.12);
+    border: 1px solid var(--border-soft);
     border-radius: 14px;
-    background: rgba(255, 255, 255, 0.86);
+    background: var(--surface-strong);
     color: var(--text-main);
     font-family: inherit;
     font-size: 0.98rem;
