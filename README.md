@@ -1,18 +1,23 @@
 # Roamora 🌍
 
-Roamora is a full-stack web application inspired by Airbnb. It allows users to browse listing locations, view detailed accommodation pages, write reviews, and explore places to stay.
+Roamora is a design-forward, full-stack accommodation discovery platform inspired by Airbnb. It connects design-loving travelers with handpicked, character-filled stays across beaches, mountains, and cities.
 
-## 🚀 Current Features
-- **Listing Management**: View list of places, edit details, and add new properties.
-- **Review System**: Create and display ratings and reviews for listings.
-- **User Authentication**: Secure authentication system powered by Passport.js and Mongoose.
-- **Modern Architecture**: Styled using vanilla CSS grids/flexbox and rendered dynamically via Express with EJS templates.
+## ✨ Premium Features
+- **Listing Discovery & Management**: Explore unique stays with high-contrast cards, detailed descriptions, and instant visual previews. Add new stays with built-in form validation.
+- **Interactive Landing (Hero) Page**:
+  - **Dynamic Particle Canvas**: Smooth floating background particle network on the landing page.
+  - **Typewriter Effect**: Sleek cycling text showcasing recommended escapes.
+  - **Aesthetic Metrics & Reviews**: Floating interactive details, guest ratings, and animated counters.
+- **Theme Customization**: Native, smooth-switching **Dark and Light modes** with persistent `localStorage` settings and AAA-level contrast readability across all components.
+- **Review System**: Create, view, and manage ratings and reviews for listings.
+- **Secure Authentication**: Safe onboarding with login and signup flows powered by Passport.js and passport-local-mongoose.
 
 ## 🛠️ Tech Stack
 - **Backend**: Node.js, Express.js
 - **Database**: MongoDB & Mongoose
 - **Templating Engine**: EJS (with EJS-Mate layout support)
 - **Authentication**: Passport.js & Passport-Local-Mongoose
+- **Styling**: Vanilla CSS with custom theme variables, responsive design, and CSS transitions.
 
 ## ⚙️ How to Run Locally
 
@@ -32,13 +37,13 @@ Roamora is a full-stack web application inspired by Airbnb. It allows users to b
    mongod
    ```
 
-4. Run the app:
+4. Seed the database (if needed):
    ```bash
-   npm run start
-   # or with nodemon
+   node init/index.js
+   ```
+
+5. Run the app:
+   ```bash
    nodemon app.js
    ```
    Open [http://localhost:5000](http://localhost:5000) in your browser.
-
----
-*We are updating this README daily as we build new features!*
