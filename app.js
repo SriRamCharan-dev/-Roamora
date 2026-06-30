@@ -35,6 +35,13 @@ if (process.env.NODE_ENV !== "production") {
 
 
 const verified = 'my-secret-token';
+/**
+ * Verifies the request token for protected API routes.
+ * @param {object} req - The request object.
+ * @param {object} res - The response object.
+ * @param {Function} next - The next middleware function.
+ * @return {void}
+ */
 function verifyToken(req, res, next) {
   const { token } = req.query;
   if (token === verified) return next();
@@ -127,6 +134,9 @@ app.use((err, req, res, next) => {
   res.status(statusCode).send(`<h1>${statusCode}</h1><p>${message}</p>`);
 });
 
+/**
+ * Connects to the local MongoDB database.
+ */
 async function connectDB() {
   try {
     await mongoose.connect('mongodb://127.0.0.1:27017/airbnb');
