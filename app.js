@@ -17,6 +17,7 @@ const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const passportLocalMongoose = require('passport-local-mongoose');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('./models/user');
 
 app.use(express.json());
@@ -28,6 +29,10 @@ app.use(morgan('dev'));
 app.engine('ejs', engine);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+if (process.env.NODE_ENV !== "production") {
+  require('dotenv').config();
+}
+
 
 const verified = 'my-secret-token';
 function verifyToken(req, res, next) {
@@ -64,6 +69,42 @@ app.use((req, res, next) => {
 
 app.use('/api', verifyToken);
 app.use(cookieParser('your-secret-string')); // Use any random secret string
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "http://localhost:5000/auth/google/callback"
+  },
+  async function (accessToken, refreshToken, profile, cb) {
+    try {
+      // Find user by Google ID
+      let user = await User.findOne({ googleId: profile.id });
+      if (!user) {
+        // If not found, check if a user with the same email already exists
+        const email = profile.emails && profile.emails[0] ? profile.emails[0].value : null;
+        if (email) {
+          user = await User.findOne({ email: email });
+        }
+        
+        if (user) {
+          // Link Google ID to existing account
+          user.googleId = profile.id;
+          await user.save();
+        } else {
+          // Create new user account
+          user = new User({
+            username: profile.displayName || (email ? email.split('@')[0] : `google-${profile.id}`),
+            email: email,
+            googleId: profile.id
+          });
+          await user.save();
+        }
+      }
+      return cb(null, user);
+    } catch (err) {
+      return cb(err, null);
+    }
+  }
+));
 
 app.get('/api', (req, res) => {
   res.send('data');
@@ -94,6 +135,7 @@ async function connectDB() {
     console.error('Database error:', err.message);
   }
 }
+
 
 connectDB();
 

@@ -387,6 +387,43 @@ a {
     border-color: var(--border-soft);
 }
 
+.btn-google {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 999px;
+    padding: 13px 22px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    background: var(--surface-strong);
+    color: var(--text-main);
+    border: 1px solid var(--border-soft);
+    box-shadow: 0 4px 12px rgba(24, 50, 42, 0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.btn-google:hover {
+    background: var(--surface-tint);
+    border-color: rgba(24, 50, 42, 0.28);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(24, 50, 42, 0.08);
+}
+
+body.dark-mode .btn-google {
+    background: var(--surface-strong);
+    color: var(--text-main);
+    border-color: var(--border-soft);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-mode .btn-google:hover {
+    background: var(--surface-tint);
+    border-color: rgba(237, 245, 239, 0.28);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
 .btn-primary:hover,
 .btn-secondary:hover,
 .btn-danger:hover,
