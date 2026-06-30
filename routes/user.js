@@ -4,6 +4,15 @@ const User = require('../models/user');
 const wrapAsync = require('../utils/wrapAsync');
 const passport = require('passport');
 
+router.get('/auth/google',
+    passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+router.get('/auth/google/callback',
+    passport.authenticate('google', { failureRedirect: '/login', failureFlash: true }),
+    function (req, res) {
+        req.flash('success', 'Welcome back to Roamora!');
+        res.redirect('/listings');
+    });
 
 router.get('/', (req, res) => {
     res.render('hero');
