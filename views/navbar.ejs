@@ -13,6 +13,17 @@
             <a href="/listings/new" class="nav-icon-btn" aria-label="Create listing">
                 <i class="fa-solid fa-plus"></i>
             </a>
+            <% if (currentUser) { %>
+                <a href="/logout" class="nav-logout-btn">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Logout</span>
+                </a>
+            <% } else { %>
+                <a href="/login" class="nav-logout-btn nav-logout-btn-soft">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span>Log in</span>
+                </a>
+            <% } %>
         </div>
     </div>
 </nav>
