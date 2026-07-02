@@ -11,7 +11,9 @@ router.get('/auth/google/callback',
     passport.authenticate('google', { failureRedirect: '/login', failureFlash: true }),
     function (req, res) {
         req.flash('success', 'Welcome back to Roamora!');
-        res.redirect('/listings');
+        const redirectUrl = req.session.returnTo || '/listings';
+        delete req.session.returnTo;
+        res.redirect(redirectUrl);
     });
 
 router.get('/', (req, res) => {
@@ -27,8 +29,16 @@ router.post('/signup', wrapAsync(async (req, res) => {
         const user = new User({ username, email });
         let registeredUser = await User.register(user, password);
         console.log(registeredUser);
-        req.flash('success', 'Welcome to Roamora!');
-        res.redirect('/listings');
+        req.login(registeredUser, function (err) {
+            if (err) {
+                req.flash('error', 'Something went wrong.');
+                return res.redirect('/signup');
+            }
+            req.flash('success', 'Welcome to Roamora!');
+            const redirectUrl = req.session.returnTo || '/listings';
+            delete req.session.returnTo;
+            res.redirect(redirectUrl);
+        });
     }
     catch (err) {
         req.flash('error', err.message);
@@ -41,7 +51,9 @@ router.get('/login', (req, res) => {
 });
 router.post('/login', passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }), async (req, res) => {
     req.flash('success', 'Welcome back to Roamora!');
-    res.redirect('/listings');
+    const redirectUrl = req.session.returnTo || '/listings';
+    delete req.session.returnTo;
+    res.redirect(redirectUrl);
 });
 
 router.get('/logout', (req, res) => {
