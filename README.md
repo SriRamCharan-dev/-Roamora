@@ -11,7 +11,7 @@ Roamora is a design-forward, full-stack accommodation discovery platform inspire
 - **Theme Customization**: Native, smooth-switching **Dark and Light modes** with persistent `localStorage` settings and AAA-level contrast readability across all components.
 - **Review System**: Create, view, and manage ratings and reviews for listings.
 - **Secure Authentication & Session Management**: Safe onboarding with local username/password flows alongside a seamless **Google OAuth 2.0** login/signup option, built using Passport.js. Flash messages are integrated via `connect-flash` to notify users of successful actions or login errors.
-- **Route Authorization**: Restricts access to sensitive routes. Users must be authenticated to create, edit, update, or delete listings. Unauthorized attempts trigger flash notifications and redirect users to the login page.
+- **Route Authorization**: Restricts access to sensitive routes. Users must be authenticated to create, edit, update, or delete listings. Unauthorized attempts trigger flash notifications, redirect users to the login page, and return them to their original page after successful login.
 - **Context-Aware UI (Dynamic Navbar)**: The navigation bar adapts dynamically based on the user's login state, displaying "Login" and "Sign Up" links when unauthenticated, and "Log Out" when authenticated.
 
 ## 🛠️ Tech Stack
