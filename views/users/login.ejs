@@ -1,32 +1,48 @@
 <% layout('layouts/boilerplate') %>
 
-<div class="row mt-3">
-    <h1 class="col-6 offset-3">Login to Roamora</h1>
-    <div class="col-6 offset-3">
-        <form action="/login" method="POST" class="needs-validation" novalidate>
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" id="username" name="username" placeholder="Enter your username" class="form-control" required>
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Please enter your username.</div>
+<section class="page-section">
+    <div class="container-shell form-shell">
+        <div class="form-panel">
+            <div class="form-hero">
+                <div class="form-copy-card">
+                    <div class="hero-badge"><i class="fa-solid fa-right-to-bracket"></i> Welcome Back</div>
+                    <h1>Log in to Roamora</h1>
+                    <p class="muted-copy">Access your account to book stays, host properties, or review your recent travel experiences.</p>
+                </div>
+                <div class="form-tip-card">
+                    <h2 class="section-heading" style="font-size:1.45rem;">Looking for stays?</h2>
+                    <p class="muted-copy">Explore standout homes, warm escapes, and design-forward properties. Simply log in or sign up to interact with listing authors and reviews.</p>
+                </div>
             </div>
 
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" class="form-control" required>
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Please enter your password.</div>
-            </div>
-            
-            <button class="btn btn-success" type="submit">Login</button>
-        </form>
-        <hr class="my-4">
-        <p class="text-center text-muted mb-3">New here? Create a normal account or continue with Google.</p>
-        <a href="/signup" class="btn btn-secondary w-100 mb-2">
-            <i class="fa-solid fa-user-plus"></i> Create a normal account
-        </a>
-        <a href="/auth/google" class="btn btn-google w-100">
-            <i class="fa-brands fa-google"></i> Continue with Google
-        </a>
+            <form action="/login" method="POST" class="needs-validation" novalidate>
+                <div class="form-grid">
+                    <div class="field-group full-span">
+                        <label for="username">Username <span class="required-mark">*</span></label>
+                        <input type="text" id="username" name="username" placeholder="Enter your username" class="form-control" required>
+                        <div class="invalid-feedback">Please enter your username.</div>
+                        <div class="valid-feedback">Looks good!</div>
+                    </div>
+
+                    <div class="field-group full-span">
+                        <label for="password">Password <span class="required-mark">*</span></label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" class="form-control" required>
+                        <div class="invalid-feedback">Please enter your password.</div>
+                        <div class="valid-feedback">Looks good!</div>
+                    </div>
+                </div>
+
+                <div class="form-actions" style="flex-direction: column; align-items: stretch; gap: 16px;">
+                    <button class="btn-primary" type="submit" style="width: 100%;">Log In</button>
+                    <div style="text-align: center; color: var(--text-soft); font-size: 0.9rem; margin: 8px 0;">— OR —</div>
+                    <a href="/auth/google" class="btn-google" style="width: 100%;">
+                        <i class="fa-brands fa-google"></i> Continue with Google
+                    </a>
+                    <div style="text-align: center; font-size: 0.95rem; margin-top: 12px;">
+                        New to Roamora? <a href="/signup" style="font-weight: 700; color: var(--brand-moss); text-decoration: underline;">Create an account</a>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+</section>

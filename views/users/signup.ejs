@@ -1,35 +1,55 @@
 <% layout('layouts/boilerplate') %>
 
-<div class="row mt-3">
-    <h1 class="col-6 offset-3">Signup on Roamora</h1>
-    <div class="col-6 offset-3">
-        <form action="/signup" method="POST" class="needs-validation" novalidate>
-            <div class="mb-3">
-                <label for="username" class="form-label">Choose a Username</label>
-                <input type="text" id="username" name="username" placeholder="Choose a Username" class="form-control" required>
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Please choose a username.</div>
-            </div>
-            
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" id="email" name="email" placeholder="Enter your Email" class="form-control" required>
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Please enter a valid email.</div>
+<section class="page-section">
+    <div class="container-shell form-shell">
+        <div class="form-panel">
+            <div class="form-hero">
+                <div class="form-copy-card">
+                    <div class="hero-badge"><i class="fa-solid fa-user-plus"></i> Join Roamora</div>
+                    <h1>Create your account</h1>
+                    <p class="muted-copy">Discover and share beautiful stays. Set up your login details to get started with planning your next journey.</p>
+                </div>
+                <div class="form-tip-card">
+                    <h2 class="section-heading" style="font-size:1.45rem;">Why register?</h2>
+                    <p class="muted-copy">Get full access to add and manage listings, share experiences with review comments, and keep track of your favorite stays across beaches, mountains, and cities.</p>
+                </div>
             </div>
 
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" id="password" name="password" placeholder="Create a Password" class="form-control" required>
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Please enter a password.</div>
-            </div>
-            
-            <button class="btn btn-success" type="submit">Create Account</button>
-        </form>
-        <hr class="my-4">
-        <a href="/auth/google" class="btn btn-google w-100">
-            <i class="fa-brands fa-google"></i> Continue with Google
-        </a>
+            <form action="/signup" method="POST" class="needs-validation" novalidate>
+                <div class="form-grid">
+                    <div class="field-group full-span">
+                        <label for="username">Username <span class="required-mark">*</span></label>
+                        <input type="text" id="username" name="username" placeholder="Choose a username" class="form-control" required minlength="3">
+                        <div class="invalid-feedback">Please choose a username (minimum 3 characters).</div>
+                        <div class="valid-feedback">Looks good!</div>
+                    </div>
+
+                    <div class="field-group full-span">
+                        <label for="email">Email <span class="required-mark">*</span></label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email" class="form-control" required>
+                        <div class="invalid-feedback">Please enter a valid email address.</div>
+                        <div class="valid-feedback">Looks good!</div>
+                    </div>
+
+                    <div class="field-group full-span">
+                        <label for="password">Password <span class="required-mark">*</span></label>
+                        <input type="password" id="password" name="password" placeholder="Create a password" class="form-control" required minlength="4">
+                        <div class="invalid-feedback">Please enter a password (minimum 4 characters).</div>
+                        <div class="valid-feedback">Looks good!</div>
+                    </div>
+                </div>
+
+                <div class="form-actions" style="flex-direction: column; align-items: stretch; gap: 16px;">
+                    <button class="btn-primary" type="submit" style="width: 100%;">Create Account</button>
+                    <div style="text-align: center; color: var(--text-soft); font-size: 0.9rem; margin: 8px 0;">— OR —</div>
+                    <a href="/auth/google" class="btn-google" style="width: 100%;">
+                        <i class="fa-brands fa-google"></i> Continue with Google
+                    </a>
+                    <div style="text-align: center; font-size: 0.95rem; margin-top: 12px;">
+                        Already have an account? <a href="/login" style="font-weight: 700; color: var(--brand-moss); text-decoration: underline;">Log in here</a>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+</section>
