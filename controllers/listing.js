@@ -19,6 +19,7 @@ module.exports.createListing = async (req, res, next) => {
     price,
     location,
     country,
+    owner: req.user._id,
   });
 
   let savedListing = await newListing.save();
@@ -30,7 +31,9 @@ module.exports.createListing = async (req, res, next) => {
 module.exports.showListing = async (req, res, next) => {
   let { id } = req.params;
 
-  let listing = await Listing.findById(id).populate('reviews');
+  let listing = await Listing.findById(id)
+    .populate('reviews')
+    .populate('owner', 'username email');
   if (!listing) {
     return next(new ExpressError(404, 'Page not found retry'));
   }

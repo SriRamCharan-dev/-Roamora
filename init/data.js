@@ -349,4 +349,22 @@ const sampleListings = [
   },
 ];
 
-module.exports = { data: sampleListings };
+const sampleUsers = [
+  {
+    username: 'john_doe',
+    email: 'john@example.com',
+    password: 'john12345',
+  },
+  {
+    username: 'jane_smith',
+    email: 'jane@example.com',
+    password: 'jane12345',
+  },
+  {
+    username: 'travel_admin',
+    email: 'admin@example.com',
+    password: 'admin12345',
+  },
+];
+
+module.exports = { data: sampleListings, users: sampleUsers };

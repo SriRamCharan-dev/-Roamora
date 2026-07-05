@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Listing = require('../models/listing');
-const { data: sampleListings } = require('./data');
+const User = require('../models/user');
+const { data: sampleListings, users: sampleUsers } = require('./data');
 
 async function connectDB() {
   try {
@@ -13,9 +14,26 @@ async function connectDB() {
 
 async function seedData() {
   try {
+    await User.deleteMany({});
     await Listing.deleteMany({});
-    await Listing.insertMany(sampleListings);
-    console.log('Sample data seeded successfully');
+
+    const seededUsers = [];
+    for (const userData of sampleUsers) {
+      const user = new User({
+        username: userData.username,
+        email: userData.email,
+      });
+      const registeredUser = await User.register(user, userData.password);
+      seededUsers.push(registeredUser);
+    }
+
+    const listingsWithOwner = sampleListings.map((obj, index) => ({
+      ...obj,
+      owner: seededUsers[index % seededUsers.length]._id,
+    }));
+
+    await Listing.insertMany(listingsWithOwner);
+    console.log('Sample users and listings seeded successfully');
   } catch (err) {
     console.error('Error seeding data:', err.message);
     process.exit(1);

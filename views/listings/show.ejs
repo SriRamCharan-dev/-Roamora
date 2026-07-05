@@ -27,6 +27,15 @@
                     <div>
                         <h1 class="detail-title"><%= listing.title %></h1>
                         <div class="detail-location"><i class="fa-solid fa-location-dot"></i> <%= listing.location %>, <%= listing.country %></div>
+                        <% if (listing.owner) { %>
+                        <div class="detail-location" style="margin-top:8px; font-size:0.98rem;">
+                            <i class="fa-solid fa-user-pen"></i>
+                            Hosted by <strong><%= listing.owner.username %></strong>
+                            <% if (listing.owner.email) { %>
+                            <span class="muted-copy">(<%= listing.owner.email %>)</span>
+                            <% } %>
+                        </div>
+                        <% } %>
                     </div>
                     <div class="chip-row">
                         <span class="chip"><i class="fa-solid fa-star"></i> 4.7 guest rating</span>
@@ -158,12 +167,14 @@
                     </div>
                 </div>
 
+                <% if (currentUser && listing.owner && currentUser._id.toString() === listing.owner._id.toString()) { %>
                 <div class="form-actions" style="margin-top:24px;">
                     <a href="/listings/<%= listing._id %>/edit" class="btn-secondary">Edit listing</a>
                     <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
                         <button type="submit" class="btn-danger">Delete listing</button>
                     </form>
                 </div>
+                <% } %>
             </aside>
         </div>
     </div>
