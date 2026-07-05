@@ -31,7 +31,7 @@
                         <div class="detail-location" style="margin-top:8px; font-size:0.98rem;">
                             <i class="fa-solid fa-user-pen"></i>
                             Hosted by <strong><%= listing.owner.username %></strong>
-                            <% if (listing.owner.email) { %>
+                            <% if (currentUser && listing.owner.email && currentUser._id.toString() === listing.owner._id.toString()) { %>
                             <span class="muted-copy">(<%= listing.owner.email %>)</span>
                             <% } %>
                         </div>

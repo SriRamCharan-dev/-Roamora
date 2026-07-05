@@ -7,9 +7,10 @@ function authorize(req, res, next) {
     next();
 }
 
-const Listing = require('./models/listing');
+const Listing = require('./Models/listing');
+const wrapAsync = require('./utils/wrapAsync');
 
-async function isListingOwner(req, res, next) {
+const isListingOwner = wrapAsync(async (req, res, next) => {
     const { id } = req.params;
     const listing = await Listing.findById(id).populate('owner', '_id');
 
@@ -24,7 +25,7 @@ async function isListingOwner(req, res, next) {
     }
 
     next();
-}
+});
 
 module.exports = authorize;
 module.exports.isListingOwner = isListingOwner;
