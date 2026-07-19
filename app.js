@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 const path = require('path');
 const methodOverride = require('method-override');
 const engine = require('ejs-mate');
@@ -33,6 +33,20 @@ if (process.env.NODE_ENV !== "production") {
   require('dotenv').config();
 }
 
+const dbUrl = process.env.ATLASDB_URL || 'mongodb://127.0.0.1:27017/airbnb';
+const { MongoStore } = require('connect-mongo');
+
+const store = MongoStore.create({
+  mongoUrl: dbUrl,
+  crypto: {
+    secret: process.env.SESSION_SECRET || 'mysupersecretstring'
+  },
+  touchAfter: 24 * 3600 // Only update session once every 24 hours unless data changes
+});
+
+store.on("error", (err) => {
+  console.log("Error in Mongo Session Store:", err);
+});
 
 const verified = 'my-secret-token';
 function verifyToken(req, res, next) {
@@ -41,7 +55,8 @@ function verifyToken(req, res, next) {
   return next(new ExpressError(401, 'ACCESS DENIED!'));
 }
 const sessionoptions = {
-  secret: 'mysupersecretstring',
+  store: store,
+  secret: process.env.SESSION_SECRET || 'mysupersecretstring',
   resave: false,
   saveUninitialized: true,
   cookie: {
@@ -130,13 +145,12 @@ app.use((err, req, res, next) => {
 
 async function connectDB() {
   try {
-    await mongoose.connect('mongodb://127.0.0.1:27017/airbnb');
-    console.log('Connected to MongoDB');
+    await mongoose.connect(dbUrl);
+    console.log('Connected to Database');
   } catch (err) {
-    console.error('Database error:', err.message);
+    console.error('Database connection error:', err.message);
   }
 }
-
 
 connectDB();
 

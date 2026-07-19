@@ -1120,80 +1120,484 @@ body.dark-mode .btn-google:hover {
     background: rgba(255, 255, 255, 0.72);
 }
 
+
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE SYSTEM — full coverage
+   Breakpoints:
+     1280px  — large desktop tweaks
+      980px  — tablet landscape
+      768px  — tablet portrait / large phone
+      560px  — small phone
+      400px  — very small (iPhone SE etc.)
+═══════════════════════════════════════════════════ */
+
+/* ── 1280px – Minor desktop refinements ─────────── */
+@media (max-width: 1280px) {
+    .detail-shell {
+        grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.75fr);
+        gap: 22px;
+    }
+    .listings-grid {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+}
+
+/* ── 980px – Tablet landscape ────────────────────── */
 @media (max-width: 980px) {
-    .hero-panel,
-    .detail-shell,
-    .form-hero,
-    .footer-top {
+    /* Containers */
+    .navbar-content,
+    .container-shell,
+    .footer-shell {
+        width: min(100%, calc(100% - 28px));
+    }
+
+    /* Hero: stack vertically, hide right visual panel */
+    .hero-panel {
+        grid-template-columns: 1fr;
+        padding: 30px 28px;
+    }
+    .hero-visual {
+        display: none; /* saves space on tablet */
+    }
+    .hero-copy h1 {
+        font-size: clamp(2rem, 5vw, 3.4rem);
+    }
+
+    /* Stats: 2 per row */
+    .stats-strip {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 16px 20px;
+        gap: 14px;
+    }
+
+    /* Listing detail: stack the two columns */
+    .detail-shell {
         grid-template-columns: 1fr;
     }
 
-    .stats-strip,
-    .detail-tag-row,
-    .offer-grid,
+    /* Booking panel: unstick when stacked */
+    .booking-panel {
+        position: static;
+    }
+
+    /* Media gallery: single column */
+    .detail-media {
+        grid-template-columns: 1fr;
+    }
+    .detail-media-stack {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+    .detail-media-stack .mini-shot {
+        min-height: 110px;
+    }
+    .detail-media-main {
+        min-height: 300px;
+    }
+
+    /* Detail tag row: 3 → 2 cols */
+    .detail-tag-row {
+        grid-template-columns: repeat(2, 1fr);
+        margin: 20px 0;
+    }
+
+    /* Offers: already 2 col, keep */
     .quick-facts {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .detail-media {
+    /* Form hero: stack */
+    .form-hero {
         grid-template-columns: 1fr;
+        gap: 16px;
+        margin-bottom: 22px;
     }
 
-    .detail-media-main {
-        min-height: 320px;
+    /* Footer: 2 column layout */
+    .footer-top {
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    .footer-top > *:first-child {
+        grid-column: 1 / -1; /* brand block spans full width */
     }
 }
 
-@media (max-width: 720px) {
+/* ── 768px – Tablet portrait / Large phone ────────── */
+@media (max-width: 768px) {
+    /* Containers */
+    .navbar-content,
+    .container-shell,
+    .footer-shell {
+        width: calc(100% - 24px);
+    }
+
+    /* Navbar */
     .navbar-content {
-        padding: 14px 0;
-        align-items: flex-start;
-        flex-direction: column;
+        min-height: 64px;
     }
 
-    .nav-links {
-        width: 100%;
-        justify-content: flex-start;
-    }
-
+    /* Sections */
     .page-section {
-        padding-top: 22px;
+        padding: 20px 0 48px;
     }
 
-    .hero-panel,
+    /* Hero panel */
+    .hero-panel {
+        padding: 24px 20px;
+        border-radius: var(--radius-lg);
+    }
+    .hero-copy h1 {
+        font-size: clamp(1.8rem, 6vw, 2.8rem);
+        margin-bottom: 12px;
+    }
+    .hero-copy p {
+        font-size: 0.9rem;
+        margin-bottom: 18px;
+    }
+    .hero-actions {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .hero-actions .btn-primary,
+    .hero-actions .btn-secondary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Stats: all single column */
+    .stats-strip {
+        grid-template-columns: 1fr;
+        padding: 14px 16px;
+        gap: 10px;
+    }
+
+    /* Listing toolbar */
+    .listing-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        margin: 20px 0 14px;
+    }
+    .listing-toolbar .section-heading {
+        font-size: clamp(1.4rem, 5vw, 1.9rem);
+    }
+
+    /* Listing grid: 2 columns on tablet, 1 on phone */
+    .listings-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    /* Listing cards */
+    .listing-card-body {
+        padding: 14px 14px 16px;
+    }
+    .listing-card-title {
+        font-size: 0.95rem;
+    }
+    .listing-card-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    .listing-card-footer .btn-ghost {
+        display: none; /* hide "View stay" ghost btn on mobile cards */
+    }
+
+    /* Detail page */
     .content-panel,
-    .form-panel,
-    .booking-panel {
-        padding: 22px;
-        border-radius: 22px;
+    .booking-panel,
+    .form-panel {
+        padding: 20px 18px;
+        border-radius: var(--radius-lg);
     }
 
-    .stats-strip,
-    .detail-tag-row,
-    .offer-grid,
-    .quick-facts,
-    .form-grid,
-    .hero-metrics {
+    .detail-title {
+        font-size: clamp(1.6rem, 5vw, 2.4rem);
+    }
+    .detail-head {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+        margin-bottom: 18px;
+    }
+    .chip-row {
+        flex-wrap: wrap;
+    }
+
+    /* Media gallery */
+    .detail-media-stack {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .detail-media-main {
+        min-height: 240px;
+    }
+
+    /* Tag row: 1 col */
+    .detail-tag-row {
         grid-template-columns: 1fr;
     }
 
+    /* Offer grid: 1 col */
+    .offer-grid {
+        grid-template-columns: 1fr;
+        margin: 14px 0 20px;
+    }
+
+    /* Quick facts: 1 col */
+    .quick-facts {
+        grid-template-columns: 1fr;
+    }
+
+    /* Booking panel */
+    .booking-panel-top {
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 14px;
+    }
+    .booking-price {
+        font-size: 1.6rem;
+    }
     .booking-row {
         grid-template-columns: 1fr;
     }
-
     .booking-field {
         border-right: none;
     }
-
     .booking-field:first-child {
         border-bottom: 1px solid var(--border-soft);
     }
 
-    .detail-head,
-    .listing-toolbar,
-    .form-actions,
+    /* Forms */
+    .form-shell {
+        padding: 24px 0 48px;
+    }
+    .form-panel {
+        width: 100%;
+        border-radius: var(--radius-lg);
+    }
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    .form-copy-card h1 {
+        font-size: clamp(1.6rem, 5vw, 2.2rem);
+    }
+    .form-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+    .form-actions .btn-primary,
+    .form-actions .btn-secondary,
+    .form-actions .btn-ghost {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Hero metrics grid */
+    .hero-metrics {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    /* Footer */
+    .footer-top {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
     .footer-bottom {
         flex-direction: column;
         align-items: flex-start;
+        gap: 14px;
     }
+    .roamora-footer {
+        padding: 24px 0 32px;
+    }
+
+    /* Filters */
+    .filters-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        margin: 24px 0 16px;
+    }
+    .tax-toggle-wrapper {
+        justify-content: space-between;
+    }
+}
+
+/* ── 560px – Small phones ─────────────────────────── */
+@media (max-width: 560px) {
+    /* Containers */
+    .navbar-content,
+    .container-shell,
+    .footer-shell {
+        width: calc(100% - 20px);
+    }
+
+    /* Hero */
+    .hero-panel {
+        padding: 20px 16px;
+        border-radius: var(--radius-md);
+    }
+    .hero-copy h1 {
+        font-size: clamp(1.6rem, 7vw, 2.2rem);
+        line-height: 1.05;
+    }
+    .hero-badge {
+        font-size: 0.82rem;
+        padding: 6px 12px;
+    }
+
+    /* Cards: single column */
+    .listings-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    /* Listing card: horizontal layout on small screens */
+    .listing-card {
+        display: grid;
+        grid-template-columns: 130px 1fr;
+        border-radius: 18px;
+    }
+    .listing-card-media {
+        aspect-ratio: unset;
+        min-height: 130px;
+    }
+    .listing-card-body {
+        padding: 12px;
+    }
+    .listing-card-title {
+        font-size: 0.88rem;
+    }
+    .listing-card-location,
+    .listing-card-meta {
+        font-size: 0.8rem;
+    }
+    .listing-card-meta {
+        display: none; /* too much text in small layout */
+    }
+    .listing-card-badge {
+        font-size: 0.74rem;
+        padding: 5px 9px;
+        left: 10px;
+        bottom: 10px;
+    }
+
+    /* Detail page panels */
+    .content-panel,
+    .booking-panel {
+        padding: 16px 14px;
+        border-radius: var(--radius-md);
+    }
+    .detail-title {
+        font-size: clamp(1.4rem, 6vw, 2rem);
+    }
+    .detail-media-main {
+        min-height: 200px;
+    }
+    .detail-media-stack {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+    .detail-media-stack .mini-shot {
+        min-height: 72px;
+    }
+    .tag-card, .offer-card, .fact-card, .review-card {
+        border-radius: 14px;
+        padding: 14px;
+    }
+
+    /* Booking price */
+    .booking-price {
+        font-size: 1.4rem;
+    }
+
+    /* Forms */
+    .form-panel {
+        padding: 16px 14px;
+        border-radius: var(--radius-md);
+    }
+    .form-copy-card,
+    .form-tip-card {
+        padding: 18px;
+        border-radius: 18px;
+    }
+
+    /* Footer */
+    .footer-brand {
+        font-size: 1rem;
+    }
+    .footer-copy {
+        font-size: 0.85rem;
+    }
+    .footer-social a {
+        width: 36px;
+        height: 36px;
+    }
+
+    /* Review form */
+    .star-rating label {
+        font-size: 1.4rem;
+    }
+
+    /* Page section padding */
+    .page-section {
+        padding: 16px 0 40px;
+    }
+}
+
+/* ── 400px – Very small screens (iPhone SE) ────────── */
+@media (max-width: 400px) {
+    .navbar-content,
+    .container-shell,
+    .footer-shell {
+        width: calc(100% - 16px);
+    }
+
+    .hero-copy h1 {
+        font-size: 1.5rem;
+    }
+
+    /* Even tighter card layout */
+    .listing-card {
+        grid-template-columns: 110px 1fr;
+        border-radius: 14px;
+    }
+    .listing-card-media {
+        min-height: 110px;
+    }
+
+    /* Booking price */
+    .booking-price {
+        font-size: 1.25rem;
+    }
+
+    /* Buttons go full width */
+    .btn-primary, .btn-secondary, .btn-ghost, .btn-danger {
+        font-size: 0.88rem;
+        padding: 11px 16px;
+    }
+
+    /* Smaller stat pills */
+    .stat-pill strong { font-size: 0.9rem; }
+    .stat-pill span   { font-size: 0.8rem; }
+}
+
+/* ── Utilities: always-good touches ─────────────── */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Smooth scroll for anchor links */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Prevent overflow on any screen size */
+body {
+    overflow-x: hidden;
 }
