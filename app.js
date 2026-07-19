@@ -29,9 +29,7 @@ app.use(morgan('dev'));
 app.engine('ejs', engine);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-if (process.env.NODE_ENV !== "production") {
-  require('dotenv').config();
-}
+require('dotenv').config();
 
 const dbUrl = process.env.ATLASDB_URL || 'mongodb://127.0.0.1:27017/airbnb';
 const { MongoStore } = require('connect-mongo');
@@ -88,7 +86,7 @@ app.use(cookieParser('your-secret-string')); // Use any random secret string
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:5000/auth/google/callback"
+    callbackURL: process.env.GOOGLE_CALLBACK_URL || "http://localhost:5000/auth/google/callback"
   },
   async function (accessToken, refreshToken, profile, cb) {
     try {
