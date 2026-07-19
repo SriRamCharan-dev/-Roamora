@@ -7,7 +7,8 @@ function authorize(req, res, next) {
     next();
 }
 
-const Listing = require('./models/listing');
+const Listing = require('./Models/listing');
+const Review = require('./Models/review');
 
 async function isListingOwner(req, res, next) {
     const { id } = req.params;
@@ -26,5 +27,23 @@ async function isListingOwner(req, res, next) {
     next();
 }
 
+async function isReviewAuthor(req, res, next) {
+    const { id, reviewId } = req.params;
+    const review = await Review.findById(reviewId);
+
+    if (!review) {
+        req.flash('error', 'Review not found.');
+        return res.redirect(`/listings/${id}`);
+    }
+
+    if (!review.author || !req.user || !review.author.equals(req.user._id)) {
+        req.flash('error', 'You are not allowed to delete this review.');
+        return res.redirect(`/listings/${id}`);
+    }
+
+    next();
+}
+
 module.exports = authorize;
 module.exports.isListingOwner = isListingOwner;
+module.exports.isReviewAuthor = isReviewAuthor;

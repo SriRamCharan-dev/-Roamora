@@ -13,13 +13,12 @@ const imageSchema = new mongoose.Schema(
     url: {
       type: String,
       default: 'https://www.pngall.com/wp-content/uploads/5/Hotel-Icon-PNG-Picture.png',
-      set: (v) => (v === '' ? 'https://www.pngall.com/wp-content/uploads/5/Hotel-Icon-PNG-Picture.png' : v),
-      validate: {
-        validator: function (v) {
-          return /^https?:\/\/.+/.test(v);
-        },
-        message: 'URL must be a valid HTTP or HTTPS URL'
-      }
+      set: (v) => (v === '' || v == null ? 'https://www.pngall.com/wp-content/uploads/5/Hotel-Icon-PNG-Picture.png' : v),
+    },
+
+    alt: {
+      type: String,
+      default: 'listing image',
     },
   },
   { _id: false }
