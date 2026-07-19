@@ -102,11 +102,16 @@
                 <div class="review-grid">
                     <% for (let review of listing.reviews) { %>
                     <div class="review-card">
+                        <h5>
+                            <%= review.author ? review.author.username : 'Anonymous' %>
+                        </h5>
                         <h5>Rating: <%= review.rating %> <i class="fa-solid fa-star" style="color:#f2a84a;"></i></h5>
                         <p><%= review.comment %></p>
+                        <% if (currentUser && review.author && review.author._id.equals(currentUser._id)) { %>
                         <form method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
                             <button class="btn-danger" type="submit">Delete review</button>
                         </form>
+                        <% } %>
                     </div>
                     <% } %>
                 </div>

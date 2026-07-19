@@ -1,19 +1,29 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const { storage } = require('../cloudConfig');
+const upload = multer({ storage });
 const wrapAsync = require('../utils/wrapAsync');
 const authorize = require('../middleware');
 const { isListingOwner } = require('../middleware');
 const { validateListing, sanitizeListing } = require('../middleware/validation');
 const listingController = require('../controllers/listing');
 
-router.get('/', wrapAsync(listingController.index));
-router.post('/', authorize, validateListing, sanitizeListing, wrapAsync(listingController.createListing));
+// Root Route
+router.route('/')
+    .get(wrapAsync(listingController.index))
+    .post(authorize, upload.single('image'), validateListing, sanitizeListing, wrapAsync(listingController.createListing));
+
+// Render New Form Route
 router.get('/new', authorize, wrapAsync(listingController.renderNewForm));
 
-router.get('/:id', wrapAsync(listingController.showListing));
-router.put('/:id', authorize, isListingOwner, validateListing, sanitizeListing, wrapAsync(listingController.updateListing));
-router.delete('/:id', authorize, isListingOwner, wrapAsync(listingController.destroyListing));
+// ID Routes
+router.route('/:id')
+    .get(wrapAsync(listingController.showListing))
+    .put(authorize, isListingOwner, upload.single('image'), validateListing, sanitizeListing, wrapAsync(listingController.updateListing))
+    .delete(authorize, isListingOwner, wrapAsync(listingController.destroyListing));
 
+// Render Edit Form Route
 router.get('/:id/edit', authorize, isListingOwner, wrapAsync(listingController.renderEditForm));
 
 module.exports = router;

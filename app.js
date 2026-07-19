@@ -18,7 +18,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const passportLocalMongoose = require('passport-local-mongoose');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const User = require('./models/user');
+const User = require('./Models/user');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

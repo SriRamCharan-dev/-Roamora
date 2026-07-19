@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const Listing = require('../models/listing');
-const User = require('../models/user');
+const Listing = require('../Models/listing');
+const User = require('../Models/user');
 const { data: sampleListings, users: sampleUsers } = require('./data');
 
 async function connectDB() {
