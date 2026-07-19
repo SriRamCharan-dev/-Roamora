@@ -3,12 +3,18 @@ const Listing = require('../Models/listing');
 const User = require('../Models/user');
 const { data: sampleListings, users: sampleUsers } = require('./data');
 
+if (process.env.NODE_ENV !== "production") {
+  require('dotenv').config({ path: '../.env' });
+}
+
+const dbUrl = process.env.ATLASDB_URL || 'mongodb://127.0.0.1:27017/airbnb';
+
 async function connectDB() {
   try {
-    await mongoose.connect('mongodb://127.0.0.1:27017/airbnb');
-    console.log('Connected to MongoDB');
+    await mongoose.connect(dbUrl);
+    console.log('Connected to Database');
   } catch (err) {
-    console.error('Database error:', err.message);
+    console.error('Database connection error:', err.message);
   }
 }
 

@@ -1,9 +1,204 @@
 <nav class="navbar">
     <div class="navbar-content">
+        <!-- Logo -->
         <a href="/listings" class="nav-logo">
             <i class="fa-brands fa-airbnb"></i>
             <span>Roamora</span>
         </a>
+
+        <style>
+            /* ── Navbar search ─────────────────────────────── */
+            .nav-search-form {
+                display: flex;
+                align-items: center;
+                border: 1px solid var(--border-soft);
+                border-radius: 100px;
+                padding: 4px 4px 4px 14px;
+                background: var(--surface-strong);
+                box-shadow: 0 2px 8px rgba(24, 50, 42, 0.04);
+                max-width: 320px;
+                width: 100%;
+                margin: 0 24px;
+                transition: box-shadow 0.2s ease, border-color 0.2s ease;
+            }
+            .nav-search-form:focus-within {
+                box-shadow: 0 4px 16px rgba(24, 50, 42, 0.08);
+                border-color: var(--brand-moss);
+            }
+            .nav-search-input {
+                border: none;
+                outline: none;
+                background: transparent;
+                font-size: 0.84rem;
+                font-weight: 600;
+                color: var(--brand-ink);
+                width: 100%;
+                font-family: inherit;
+            }
+            .nav-search-input::placeholder { color: var(--text-soft); opacity: 0.75; }
+            .nav-search-btn {
+                background: var(--brand-moss);
+                color: #fff;
+                border: none;
+                outline: none;
+                width: 28px; height: 28px;
+                border-radius: 50%;
+                display: flex; align-items: center; justify-content: center;
+                cursor: pointer;
+                transition: transform 0.2s ease, background-color 0.2s ease;
+                padding: 0; flex-shrink: 0;
+            }
+            .nav-search-btn:hover { transform: scale(1.06); background-color: #245242; }
+            .nav-search-btn i { font-size: 0.78rem; }
+
+            /* ── Hamburger button ──────────────────────────── */
+            .nav-hamburger {
+                display: none;
+                flex-direction: column;
+                justify-content: center;
+                gap: 5px;
+                width: 42px; height: 42px;
+                background: transparent;
+                border: 1px solid var(--border-soft);
+                border-radius: 12px;
+                cursor: pointer;
+                padding: 8px;
+                margin-left: auto;
+                transition: background 0.2s ease, border-color 0.2s ease;
+            }
+            .nav-hamburger:hover { background: rgba(47,106,86,0.08); border-color: rgba(47,106,86,0.18); }
+            .nav-hamburger .bar {
+                display: block;
+                width: 100%;
+                height: 2px;
+                background: var(--brand-ink);
+                border-radius: 4px;
+                transition: transform 0.3s ease, opacity 0.3s ease;
+            }
+            /* X state */
+            .nav-hamburger.open .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+            .nav-hamburger.open .bar:nth-child(2) { opacity: 0; }
+            .nav-hamburger.open .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+            /* ── Mobile drawer ─────────────────────────────── */
+            .mobile-menu-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(10,16,13,0.48);
+                z-index: 998;
+                opacity: 0;
+                transition: opacity 0.25s ease;
+            }
+            .mobile-menu-overlay.open { opacity: 1; }
+
+            .mobile-menu-drawer {
+                position: fixed;
+                top: 0; right: -100%;
+                width: min(300px, 85vw);
+                height: 100%;
+                background: var(--surface-strong);
+                z-index: 999;
+                padding: 28px 22px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                box-shadow: -12px 0 40px rgba(0,0,0,0.18);
+                transition: right 0.32s cubic-bezier(0.4,0,0.2,1);
+                overflow-y: auto;
+            }
+            .mobile-menu-drawer.open { right: 0; }
+
+            .mobile-menu-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 16px;
+                padding-bottom: 16px;
+                border-bottom: 1px solid var(--border-soft);
+            }
+            .mobile-menu-close {
+                width: 36px; height: 36px;
+                display: flex; align-items: center; justify-content: center;
+                background: transparent;
+                border: 1px solid var(--border-soft);
+                border-radius: 50%;
+                cursor: pointer;
+                color: var(--text-main);
+                transition: background 0.2s ease;
+            }
+            .mobile-menu-close:hover { background: rgba(47,106,86,0.08); }
+
+            .mobile-search-form {
+                display: flex;
+                align-items: center;
+                border: 1px solid var(--border-soft);
+                border-radius: 14px;
+                padding: 10px 10px 10px 14px;
+                background: var(--surface-tint);
+                margin-bottom: 12px;
+                gap: 8px;
+            }
+            .mobile-search-form input {
+                border: none; outline: none; background: transparent;
+                font-size: 0.9rem; font-weight: 600; color: var(--brand-ink);
+                width: 100%; font-family: inherit;
+            }
+            .mobile-search-form input::placeholder { color: var(--text-soft); opacity: 0.75; }
+            .mobile-search-form button {
+                background: var(--brand-moss); color: #fff;
+                border: none; border-radius: 10px;
+                width: 32px; height: 32px;
+                display: flex; align-items: center; justify-content: center;
+                cursor: pointer; flex-shrink: 0;
+            }
+
+            .mobile-nav-link {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 13px 16px;
+                border-radius: 14px;
+                text-decoration: none;
+                font-weight: 600;
+                font-size: 0.95rem;
+                color: var(--text-main);
+                border: 1px solid transparent;
+                transition: background 0.2s ease, border-color 0.2s ease;
+            }
+            .mobile-nav-link:hover { background: rgba(47,106,86,0.07); border-color: rgba(47,106,86,0.1); }
+            .mobile-nav-link.danger { color: #9b2f2f; }
+            .mobile-nav-link.danger:hover { background: rgba(181,52,52,0.07); border-color: rgba(181,52,52,0.12); }
+            .mobile-nav-link i { width: 20px; text-align: center; color: var(--brand-moss); }
+            .mobile-nav-link.danger i { color: #9b2f2f; }
+
+            .mobile-menu-divider { height: 1px; background: var(--border-soft); margin: 6px 0; }
+
+            body.dark-mode .mobile-menu-drawer { background: var(--surface-strong); }
+            body.dark-mode .mobile-nav-link { color: var(--text-main); }
+            body.dark-mode .mobile-menu-close { color: var(--text-main); }
+
+            /* ── Responsive breakpoints ────────────────────── */
+            @media (max-width: 900px) {
+                .nav-search-form { max-width: 220px; margin: 0 12px; }
+            }
+            @media (max-width: 768px) {
+                .nav-search-form { display: none; }
+                .nav-links { display: none; }
+                .nav-hamburger { display: flex; }
+                .mobile-menu-overlay { display: block; }
+            }
+        </style>
+
+        <!-- Desktop search bar -->
+        <form class="nav-search-form" action="/listings" method="GET">
+            <input type="text" name="search" id="navbar-search" class="nav-search-input" placeholder="Search destinations..." value="<%= typeof search !== 'undefined' ? search : '' %>" autocomplete="off">
+            <button type="submit" class="nav-search-btn" aria-label="Submit search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </form>
+
+        <!-- Desktop nav links -->
         <div class="nav-links">
             <a href="/listings" class="nav-link active">Explore stays</a>
             <a href="/listings/new" class="nav-link">Host a place</a>
@@ -25,5 +220,119 @@
                 </a>
             <% } %>
         </div>
+
+        <!-- Hamburger (mobile only) -->
+        <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
     </div>
 </nav>
+
+<!-- Mobile overlay -->
+<div class="mobile-menu-overlay" id="mobile-overlay" role="dialog" aria-modal="true" aria-label="Navigation menu"></div>
+
+<!-- Mobile drawer -->
+<div class="mobile-menu-drawer" id="mobile-drawer">
+    <div class="mobile-menu-header">
+        <a href="/listings" class="nav-logo" style="font-size:1.1rem;">
+            <i class="fa-brands fa-airbnb"></i>
+            <span>Roamora</span>
+        </a>
+        <button class="mobile-menu-close" id="mobile-close" aria-label="Close menu">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+
+    <!-- Mobile search -->
+    <form class="mobile-search-form" action="/listings" method="GET">
+        <input type="text" name="search" placeholder="Search destinations..." value="<%= typeof search !== 'undefined' ? search : '' %>" autocomplete="off">
+        <button type="submit" aria-label="Search"><i class="fa-solid fa-magnifying-glass" style="font-size:0.8rem;"></i></button>
+    </form>
+
+    <div class="mobile-menu-divider"></div>
+
+    <a href="/listings" class="mobile-nav-link">
+        <i class="fa-solid fa-compass"></i> Explore stays
+    </a>
+    <a href="/listings/new" class="mobile-nav-link">
+        <i class="fa-solid fa-house-circle-check"></i> Host a place
+    </a>
+    <button id="mobile-theme-toggle" class="mobile-nav-link" type="button" style="background:none;border:1px solid transparent;text-align:left;cursor:pointer;width:100%;">
+        <i class="fa-solid fa-moon" id="mobile-theme-icon"></i>
+        <span id="mobile-theme-label">Toggle dark mode</span>
+    </button>
+
+    <div class="mobile-menu-divider"></div>
+
+    <% if (currentUser) { %>
+        <a href="/logout" class="mobile-nav-link danger">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </a>
+    <% } else { %>
+        <a href="/login" class="mobile-nav-link">
+            <i class="fa-solid fa-right-to-bracket"></i> Log in
+        </a>
+        <a href="/signup" class="mobile-nav-link">
+            <i class="fa-solid fa-user-plus"></i> Sign up
+        </a>
+    <% } %>
+</div>
+
+<script>
+    (function () {
+        const hamburger = document.getElementById('nav-hamburger');
+        const overlay   = document.getElementById('mobile-overlay');
+        const drawer    = document.getElementById('mobile-drawer');
+        const closeBtn  = document.getElementById('mobile-close');
+        const mobileThemeBtn  = document.getElementById('mobile-theme-toggle');
+        const mobileThemeIcon = document.getElementById('mobile-theme-icon');
+
+        function openDrawer() {
+            hamburger.classList.add('open');
+            hamburger.setAttribute('aria-expanded', 'true');
+            overlay.classList.add('open');
+            drawer.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeDrawer() {
+            hamburger.classList.remove('open');
+            hamburger.setAttribute('aria-expanded', 'false');
+            overlay.classList.remove('open');
+            drawer.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        hamburger.addEventListener('click', openDrawer);
+        closeBtn.addEventListener('click', closeDrawer);
+        overlay.addEventListener('click', closeDrawer);
+
+        // Sync mobile theme icon with current state
+        if (document.body.classList.contains('dark-mode')) {
+            mobileThemeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+
+        if (mobileThemeBtn) {
+            mobileThemeBtn.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                const isDark = document.body.classList.contains('dark-mode');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                // Sync both toggle icons
+                const desktopIcon = document.getElementById('theme-icon');
+                if (isDark) {
+                    mobileThemeIcon.classList.replace('fa-moon', 'fa-sun');
+                    if (desktopIcon) desktopIcon.classList.replace('fa-moon', 'fa-sun');
+                } else {
+                    mobileThemeIcon.classList.replace('fa-sun', 'fa-moon');
+                    if (desktopIcon) desktopIcon.classList.replace('fa-sun', 'fa-moon');
+                }
+            });
+        }
+
+        // Close on Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeDrawer();
+        });
+    })();
+</script>

@@ -49,16 +49,232 @@
             </div>
         </div>
 
-        <div class="listing-toolbar">
-            <div>
-                <h2 class="section-heading">Featured destinations</h2>
-                <p class="section-subtext">A clean browse experience with stronger cards, clearer hierarchy, and a more premium feel.</p>
+        <style>
+            /* ── Filters Layout ────────────────────────────────────────────── */
+            .filters-container {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 24px;
+                margin: 40px 0 24px;
+                padding-bottom: 8px;
+                border-bottom: 1px solid var(--border-soft);
+            }
+
+            .filters-scroller {
+                display: flex;
+                align-items: center;
+                gap: 32px;
+                overflow-x: auto;
+                scrollbar-width: none;
+                padding-bottom: 8px;
+                flex-grow: 1;
+            }
+            .filters-scroller::-webkit-scrollbar {
+                display: none;
+            }
+
+            .filter-option {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 6px;
+                color: var(--text-soft);
+                text-decoration: none;
+                cursor: pointer;
+                opacity: 0.72;
+                transition: opacity 0.2s ease, color 0.2s ease, border-bottom-color 0.2s ease;
+                border-bottom: 2px solid transparent;
+                padding-bottom: 8px;
+                flex-shrink: 0;
+            }
+
+            .filter-option i {
+                font-size: 1.35rem;
+            }
+
+            .filter-option span {
+                font-size: 0.78rem;
+                font-weight: 700;
+                letter-spacing: 0.02em;
+            }
+
+            .filter-option:hover {
+                opacity: 1;
+                color: var(--brand-ink);
+                border-bottom-color: var(--border-soft);
+            }
+
+            .filter-option.active {
+                opacity: 1;
+                color: var(--brand-moss);
+                border-bottom-color: var(--brand-moss);
+            }
+
+            /* Tax Toggle Switch */
+            .tax-toggle-wrapper {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                border: 1px solid var(--border-soft);
+                border-radius: var(--radius-md);
+                padding: 10px 16px;
+                background: var(--surface-strong);
+                box-shadow: var(--shadow-soft);
+                flex-shrink: 0;
+            }
+            .tax-toggle-label {
+                font-size: 0.85rem;
+                font-weight: 700;
+                color: var(--brand-ink);
+            }
+            .tax-toggle-sub {
+                display: block;
+                font-size: 0.7rem;
+                color: var(--text-soft);
+                font-weight: 600;
+                margin-top: 1px;
+            }
+
+            .switch {
+                position: relative;
+                display: inline-block;
+                width: 44px;
+                height: 24px;
+            }
+
+            .switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+            .slider {
+                position: absolute;
+                cursor: pointer;
+                inset: 0;
+                background-color: var(--surface-tint);
+                border: 1px solid var(--border-soft);
+                transition: .22s;
+                border-radius: 34px;
+            }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 16px;
+                width: 16px;
+                left: 3px;
+                bottom: 3px;
+                background-color: var(--text-soft);
+                transition: .22s;
+                border-radius: 50%;
+            }
+
+            input:checked + .slider {
+                background-color: var(--brand-moss);
+                border-color: var(--brand-moss);
+            }
+
+            input:checked + .slider:before {
+                transform: translateX(20px);
+                background-color: #fff;
+            }
+
+            @media (max-width: 768px) {
+                .filters-container {
+                    flex-direction: column;
+                    align-items: stretch;
+                    gap: 12px;
+                    margin: 24px 0 14px;
+                }
+                .filters-scroller {
+                    gap: 20px;
+                }
+                .filter-option i {
+                    font-size: 1.1rem;
+                }
+                .filter-option span {
+                    font-size: 0.72rem;
+                }
+                .tax-toggle-wrapper {
+                    justify-content: space-between;
+                    padding: 10px 14px;
+                }
+            }
+            @media (max-width: 560px) {
+                .filters-scroller {
+                    gap: 16px;
+                }
+                .filter-option {
+                    gap: 4px;
+                }
+                .filter-option i {
+                    font-size: 1rem;
+                }
+                .tax-toggle-sub {
+                    display: none; /* too small — hide subtext */
+                }
+            }
+        </style>
+
+        <div class="filters-container">
+            <div class="filters-scroller">
+                <a class="filter-option active">
+                    <i class="fa-solid fa-fire"></i>
+                    <span>Trending</span>
+                </a>
+                <a class="filter-option">
+                    <i class="fa-solid fa-bed"></i>
+                    <span>Rooms</span>
+                </a>
+                <a class="filter-option">
+                    <i class="fa-solid fa-mountain-city"></i>
+                    <span>Iconic cities</span>
+                </a>
+                <a class="filter-option">
+                    <i class="fa-solid fa-mountain"></i>
+                    <span>Mountains</span>
+                </a>
+                <a class="filter-option">
+                    <i class="fa-solid fa-fort-awesome"></i>
+                    <span>Castles</span>
+                </a>
+                <a class="filter-option">
+                    <i class="fa-solid fa-water"></i>
+                    <span>Amazing pools</span>
+                </a>
+                <a class="filter-option">
+                    <i class="fa-solid fa-tents"></i>
+                    <span>Camping</span>
+                </a>
+                <a class="filter-option">
+                    <i class="fa-solid fa-cow"></i>
+                    <span>Farms</span>
+                </a>
+                <a class="filter-option">
+                    <i class="fa-solid fa-snowflake"></i>
+                    <span>Arctic</span>
+                </a>
+                <a class="filter-option">
+                    <i class="fa-solid fa-igloo"></i>
+                    <span>Domes</span>
+                </a>
+                <a class="filter-option">
+                    <i class="fa-solid fa-ship"></i>
+                    <span>Boats</span>
+                </a>
             </div>
-            <div class="chip-row">
-                <span class="chip">Beachfront</span>
-                <span class="chip">Mountain air</span>
-                <span class="chip">City lights</span>
-                <span class="chip">Remote work</span>
+
+            <div class="tax-toggle-wrapper">
+                <div>
+                    <span class="tax-toggle-label">Display total before taxes</span>
+                    <span class="tax-toggle-sub">Shows total including 18% GST</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="tax-switch">
+                    <span class="slider"></span>
+                </label>
             </div>
         </div>
 
@@ -79,12 +295,153 @@
                     </div>
                     <div class="listing-card-meta">Thoughtful stay | Instant visual preview | Ideal for short getaways</div>
                     <div class="listing-card-footer">
-                        <div class="listing-card-price">&#8377;<%= listing.price.toLocaleString("en-IN") %> <span>/ night</span></div>
+                        <div class="listing-card-price">
+                            <span class="base-price">&#8377;<%= listing.price.toLocaleString("en-IN") %></span> <span>/ night</span>
+                            <span class="tax-info" style="display: none; font-size: 0.78rem; color: var(--brand-moss); font-weight: 700; margin-left: 2px;"><br>+18% GST (&#8377;<%= Math.round(listing.price * 1.18).toLocaleString("en-IN") %> total)</span>
+                        </div>
                         <span class="btn-ghost">View stay</span>
                     </div>
                 </div>
             </a>
             <% } %>
         </div>
+
+        <!-- No Results Placeholder -->
+        <div id="no-results" style="display: none; text-align: center; padding: 60px 24px; border: 1px dashed var(--border-soft); border-radius: var(--radius-lg); background: var(--surface-tint); margin-top: 20px; transition: opacity 0.25s ease;">
+            <i class="fa-solid fa-circle-question" style="font-size: 3rem; color: var(--brand-moss); opacity: 0.5; margin-bottom: 16px;"></i>
+            <h3 style="color: var(--brand-ink); font-weight: 700; margin-bottom: 8px;">No listings in this category</h3>
+            <p style="color: var(--text-soft); font-size: 0.9rem; max-width: 340px; margin: 0 auto;">We don't have any stays registered under this category yet. Explore other options or host your own!</p>
+        </div>
     </div>
 </section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Tax switch handler
+        const taxSwitch = document.getElementById('tax-switch');
+        if (taxSwitch) {
+            taxSwitch.addEventListener('change', () => {
+                const taxInfos = document.querySelectorAll('.tax-info');
+                taxInfos.forEach(info => {
+                    info.style.display = taxSwitch.checked ? 'inline' : 'none';
+                });
+            });
+        }
+
+        // Filters handler
+        const filterOptions = document.querySelectorAll('.filter-option');
+        const listingCards = document.querySelectorAll('.listing-card');
+        const noResults = document.getElementById('no-results');
+
+        filterOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                // Update active state
+                filterOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+
+                const category = option.querySelector('span').textContent.trim().toLowerCase();
+                let visibleCount = 0;
+
+                listingCards.forEach(card => {
+                    const title = card.querySelector('.listing-card-title').textContent.toLowerCase();
+                    const location = card.querySelector('.listing-card-location').textContent.toLowerCase();
+                    const meta = card.querySelector('.listing-card-meta').textContent.toLowerCase();
+                    
+                    let matches = false;
+
+                    if (category === 'trending') {
+                        matches = true; // Show all for trending
+                    } else if (category === 'rooms') {
+                        matches = title.includes('room') || title.includes('apartment') || title.includes('studio') || title.includes('suite') || meta.includes('room');
+                    } else if (category === 'iconic cities') {
+                        matches = location.includes('city') || location.includes('goa') || location.includes('paris') || location.includes('rome') || location.includes('delhi') || location.includes('mumbai') || location.includes('london') || location.includes('york');
+                    } else if (category === 'mountains') {
+                        matches = title.includes('mountain') || title.includes('cabin') || title.includes('hill') || title.includes('forest') || title.includes('nature') || title.includes('wood') || meta.includes('mountain');
+                    } else if (category === 'castles') {
+                        matches = title.includes('castle') || title.includes('fort') || title.includes('palace') || title.includes('manor') || title.includes('estate');
+                    } else if (category === 'amazing pools') {
+                        matches = title.includes('pool') || title.includes('water') || title.includes('lake') || title.includes('beach') || title.includes('ocean');
+                    } else if (category === 'camping') {
+                        matches = title.includes('camp') || title.includes('tent') || title.includes('glamping') || title.includes('outdoor');
+                    } else if (category === 'farms') {
+                        matches = title.includes('farm') || title.includes('barn') || title.includes('ranch') || title.includes('field');
+                    } else if (category === 'arctic') {
+                        matches = title.includes('arctic') || title.includes('snow') || title.includes('ice') || title.includes('winter');
+                    } else if (category === 'domes') {
+                        matches = title.includes('dome') || title.includes('igloo') || title.includes('yurt');
+                    } else if (category === 'boats') {
+                        matches = title.includes('boat') || title.includes('houseboat') || title.includes('yacht') || title.includes('ship');
+                    }
+
+                    if (matches) {
+                        visibleCount++;
+                        card.style.display = 'flex';
+                        // Tiny delay for smooth fade in
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                        }, 50);
+                    } else {
+                        card.style.opacity = '0';
+                        card.style.display = 'none';
+                    }
+                });
+
+                // Handle no results visibility
+                if (visibleCount === 0) {
+                    noResults.style.display = 'block';
+                    setTimeout(() => {
+                        noResults.style.opacity = '1';
+                    }, 50);
+                } else {
+                    noResults.style.opacity = '0';
+                    noResults.style.display = 'none';
+                }
+            });
+        });
+
+        // Instant search handler (client-side card filtering)
+        const searchInput = document.getElementById('navbar-search');
+        if (searchInput && listingCards.length > 0) {
+            searchInput.addEventListener('input', () => {
+                const queryText = searchInput.value.toLowerCase().trim();
+                let visibleCount = 0;
+
+                // Reset filter active states when searching
+                if (queryText !== "") {
+                    filterOptions.forEach(opt => opt.classList.remove('active'));
+                } else {
+                    // Set Trending active again if search is cleared
+                    const trendingOption = Array.from(filterOptions).find(opt => opt.querySelector('span').textContent.trim().toLowerCase() === 'trending');
+                    if (trendingOption) trendingOption.classList.add('active');
+                }
+
+                listingCards.forEach(card => {
+                    const title = card.querySelector('.listing-card-title').textContent.toLowerCase();
+                    const location = card.querySelector('.listing-card-location').textContent.toLowerCase();
+                    const meta = card.querySelector('.listing-card-meta').textContent.toLowerCase();
+                    
+                    const matches = title.includes(queryText) || location.includes(queryText) || meta.includes(queryText);
+
+                    if (matches) {
+                        visibleCount++;
+                        card.style.display = 'flex';
+                        card.style.opacity = '1';
+                    } else {
+                        card.style.opacity = '0';
+                        card.style.display = 'none';
+                    }
+                });
+
+                if (visibleCount === 0) {
+                    noResults.style.display = 'block';
+                    setTimeout(() => {
+                        noResults.style.opacity = '1';
+                    }, 50);
+                } else {
+                    noResults.style.opacity = '0';
+                    noResults.style.display = 'none';
+                }
+            });
+        }
+    });
+</script>

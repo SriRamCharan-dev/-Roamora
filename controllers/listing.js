@@ -2,9 +2,49 @@ const Listing = require('../Models/listing');
 const ExpressError = require('../utils/ExpressError');
 const { cloudinary } = require('../cloudConfig');
 
+const locationIQKey = process.env.LOCATIONIQ_API_KEY;
+
+async function getGeocode(location, country) {
+  try {
+    const query = `${location}, ${country}`;
+    const url = `https://us1.locationiq.com/v1/search?key=${locationIQKey}&q=${encodeURIComponent(query)}&format=json&limit=1`;
+    const res = await fetch(url);
+    if (!res.ok) {
+      throw new Error(`LocationIQ HTTP error: ${res.status}`);
+    }
+    const data = await res.json();
+    if (data && data.length > 0) {
+      const lon = parseFloat(data[0].lon);
+      const lat = parseFloat(data[0].lat);
+      return {
+        type: 'Point',
+        coordinates: [lon, lat]
+      };
+    }
+  } catch (err) {
+    console.error('LocationIQ geocoding error:', err.message);
+  }
+  return null;
+}
+
 module.exports.index = async (req, res, next) => {
-  let listings = await Listing.find({});
-  res.render('listings/index.ejs', { listings });
+  const { search } = req.query;
+  let query = {};
+  
+  if (search && search.trim() !== "") {
+    const searchRegex = new RegExp(search.trim(), 'i');
+    query = {
+      $or: [
+        { title: searchRegex },
+        { location: searchRegex },
+        { country: searchRegex },
+        { description: searchRegex }
+      ]
+    };
+  }
+
+  let listings = await Listing.find(query);
+  res.render('listings/index.ejs', { listings, search: search || '' });
 };
 
 module.exports.renderNewForm = async (req, res) => {
@@ -18,6 +58,12 @@ module.exports.createListing = async (req, res, next) => {
   const imageUrl      = req.file ? req.file.path     : undefined;
   const imageFilename = req.file ? req.file.filename  : undefined;
 
+  let geometry = { type: 'Point', coordinates: [77.2090, 28.6139] }; // Fallback to Delhi coordinates
+  const geocodeResult = await getGeocode(location, country);
+  if (geocodeResult) {
+    geometry = geocodeResult;
+  }
+
   const newListing = new Listing({
     title,
     description,
@@ -25,6 +71,7 @@ module.exports.createListing = async (req, res, next) => {
     price,
     location,
     country,
+    geometry,
     owner: req.user._id,
   });
 
@@ -76,6 +123,14 @@ module.exports.updateListing = async (req, res, next) => {
       await cloudinary.uploader.destroy(listing.image.filename);
     }
     listing.image = { url: req.file.path, filename: req.file.filename, alt: title };
+  }
+
+  // Update geometry if location or country has changed, or if it doesn't exist
+  if (!listing.geometry || !listing.geometry.coordinates || listing.geometry.coordinates.length === 0 || listing.location !== location || listing.country !== country) {
+    const geocodeResult = await getGeocode(location, country);
+    if (geocodeResult) {
+      listing.geometry = geocodeResult;
+    }
   }
 
   listing.title       = title;

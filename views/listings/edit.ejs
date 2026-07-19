@@ -15,7 +15,7 @@
                 </div>
             </div>
 
-            <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" class="needs-validation" novalidate>
+            <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" class="needs-validation" novalidate enctype="multipart/form-data">
                 <div class="form-grid">
                     <div class="field-group full-span">
                         <label for="title">Title <span class="required-mark">*</span></label>
@@ -28,8 +28,13 @@
                     </div>
 
                     <div class="field-group full-span">
-                        <label for="image">Image URL</label>
-                        <input type="url" id="image" name="image" value="<%= listing.image ? listing.image.url : '' %>" placeholder="Enter an image URL" class="form-control">
+                        <label>Current Image Preview</label>
+                        <div class="image-preview-wrapper mb-2" style="border: 1px solid var(--border-soft); border-radius: var(--radius-md); padding: 8px; width: fit-content; background: var(--surface-tint);">
+                            <img id="imagePreview" src="<%= listing.image ? listing.image.url : 'https://www.pngall.com/wp-content/uploads/5/Hotel-Icon-PNG-Picture.png' %>" alt="Listing image preview" style="max-height: 200px; border-radius: var(--radius-sm); display: block; object-fit: cover;">
+                        </div>
+                        <label for="image">Upload New Image</label>
+                        <input type="file" id="image" name="image" class="form-control">
+                        <div class="field-help">Leave empty to keep the existing image.</div>
                     </div>
 
                     <div class="field-group">
@@ -56,3 +61,108 @@
         </div>
     </div>
 </section>
+
+<script>
+  (() => {
+    'use strict'
+
+    const forms = document.querySelectorAll('.needs-validation')
+
+    const validationRules = {
+      title: {
+        validate: (value, field) => value.trim().length >= 5 && value.trim().length <= 100,
+        errorMessage: 'Title must be between 5 and 100 characters.'
+      },
+      description: {
+        validate: (value, field) => value.trim().length >= 10 && value.trim().length <= 5000,
+        errorMessage: 'Description must be between 10 and 5000 characters.'
+      },
+      image: {
+        validate: (value, field) => true, // Optional on edit
+        errorMessage: ''
+      },
+      price: {
+        validate: (value, field) => {
+          const num = parseFloat(value)
+          return !isNaN(num) && num > 0 && num <= 999999
+        },
+        errorMessage: 'Price must be between 1 and 999999.'
+      },
+      location: {
+        validate: (value, field) => value.trim().length >= 3 && value.trim().length <= 100,
+        errorMessage: 'Location must be between 3 and 100 characters.'
+      },
+      country: {
+        validate: (value, field) => value.trim().length >= 2 && value.trim().length <= 100,
+        errorMessage: 'Country must be between 2 and 100 characters.'
+      }
+    }
+
+    Object.keys(validationRules).forEach((fieldName) => {
+      const field = document.getElementById(fieldName)
+      if (!field) return
+
+      const validate = () => validateField(fieldName, field)
+      field.addEventListener('blur', validate)
+      field.addEventListener('input', validate)
+      if (field.type === 'file') {
+        field.addEventListener('change', validate)
+      }
+    })
+
+    function validateField(fieldName, field) {
+      const rule = validationRules[fieldName]
+      const isValid = rule.validate(field.value, field)
+      const errorElement = document.getElementById(`${fieldName}Error`)
+
+      field.classList.toggle('is-valid', isValid)
+      field.classList.toggle('is-invalid', !isValid)
+
+      if (errorElement && !isValid) {
+        errorElement.textContent = rule.errorMessage
+      }
+    }
+
+    Array.from(forms).forEach((form) => {
+      form.addEventListener('submit', (event) => {
+        let isValid = true
+
+        Object.keys(validationRules).forEach((fieldName) => {
+          const field = document.getElementById(fieldName)
+          if (!field) return
+
+          const passes = validationRules[fieldName].validate(field.value, field)
+          field.classList.toggle('is-valid', passes)
+          field.classList.toggle('is-invalid', !passes)
+
+          if (!passes) {
+            isValid = false
+          }
+        })
+
+        if (!isValid) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+
+        form.classList.add('was-validated')
+      }, false)
+    })
+
+    // Image preview handler
+    const imageInput = document.getElementById('image')
+    const imagePreview = document.getElementById('imagePreview')
+    if (imageInput && imagePreview) {
+      imageInput.addEventListener('change', function() {
+        const file = this.files[0]
+        if (file) {
+          const reader = new FileReader()
+          reader.onload = function(e) {
+            imagePreview.src = e.target.result
+          }
+          reader.readAsDataURL(file)
+        }
+      })
+    }
+  })()
+</script>

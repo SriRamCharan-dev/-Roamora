@@ -1,64 +1,91 @@
 # Roamora 🌍
 
-Roamora is a design-forward, full-stack accommodation discovery platform inspired by Airbnb. It connects design-loving travelers with handpicked, character-filled stays across beaches, mountains, and cities.
+Roamora is a design-forward, highly responsive full-stack accommodation discovery platform inspired by Airbnb. It connects design-loving travelers with handpicked, character-filled stays across beaches, mountains, cities, castles, and domes.
 
 ## ✨ Premium Features
-- **Listing Discovery & Management**: Explore unique stays with high-contrast cards, detailed descriptions, and instant visual previews. Add new stays with built-in form validation.
-- **Interactive Landing (Hero) Page**:
-  - **Dynamic Particle Canvas**: Smooth floating background particle network on the landing page.
-  - **Typewriter Effect**: Sleek cycling text showcasing recommended escapes.
-  - **Aesthetic Metrics & Reviews**: Floating interactive details, guest ratings, and animated counters.
-- **Theme Customization**: Native, smooth-switching **Dark and Light modes** with persistent `localStorage` settings and AAA-level contrast readability across all components.
-- **Review System**: Create, view, and manage ratings and reviews for listings.
-- **Secure Authentication & Session Management**: Safe onboarding with local username/password flows alongside a seamless **Google OAuth 2.0** login/signup option, built using Passport.js. Flash messages are integrated via `connect-flash` to notify users of successful actions or login errors.
-- **Route Authorization**: Restricts access to sensitive routes. Users must be authenticated to create, edit, update, or delete listings. Unauthorized attempts trigger flash notifications, redirect users to the login page, and return them to their original page after successful login.
-- **Context-Aware UI (Dynamic Navbar)**: The navigation bar adapts dynamically based on the user's login state, displaying "Login" and "Sign Up" links when unauthenticated, and "Log Out" when authenticated.
+
+*   **Responsive Multi-Device Layout**: Fully optimized with a bespoke 5-breakpoint layout engine spanning desktop, tablet, and mobile (featuring an interactive sliding mobile drawer navigation with animated hamburger-to-close toggles).
+*   **Listing Discovery & Management**: Explore unique stays with high-contrast cards, detailed descriptions, and category-focused image collections. Users can host and list new properties with robust form validation.
+*   **Smart Category Filters & Search**: Real-time client-side search filtering matched with custom property tags like 🏰 **Castles**, 🏊 **Amazing Pools**, ⛺ **Camping**, 🚜 **Farms**, ❄️ **Arctic**, 🔮 **Domes**, ⛵ **Boats**, and 🛏️ **Rooms**.
+*   **Bespoke Dark & Light Mode**: Smooth theme toggling styled with modern CSS variables, persisting client settings seamlessly in `localStorage`.
+*   **Interactive Reviews**: Dedicated rating stars and feedback card decks for every property.
+*   **Secure Authentication & Session Store**: Secured with username/password flows alongside **Google OAuth 2.0** login capabilities, running on a resilient MongoDB-backed session database using `connect-mongo`.
+*   **Smart Routing**: Built-in authentication middleware to guarantee secure authorization for listing manipulation and listing ownership.
+
+---
 
 ## 🛠️ Tech Stack
-- **Backend**: Node.js, Express.js
-- **Database**: MongoDB & Mongoose
-- **Templating Engine**: EJS (with EJS-Mate layout support)
-- **Authentication**: Passport.js, Passport-Local (local email/password), Passport-Local-Mongoose, & Passport-Google-OAuth20 (Google OAuth 2.0 Strategy)
-- **Middleware & Security**: Custom route protection middleware, session-based login status checks
-- **Session & Messaging**: `express-session`, `cookie-parser`, and `connect-flash`
-- **Styling**: Vanilla CSS with custom theme variables, responsive design, and CSS transitions.
 
+*   **Backend**: Node.js, Express.js
+*   **Database**: MongoDB & Mongoose
+*   **Session Management**: `express-session`, `cookie-parser`, `connect-mongo` (Atlas-ready persistent session store)
+*   **Security & OAuth**: Passport.js, Passport-Local, Passport-Google-OAuth20
+*   **Template Engine**: EJS (with EJS-Mate layouts)
+*   **Styling**: Modern CSS3, responsive breakpoints, variable-based theme layers (no bloated libraries)
+
+---
 
 ## ⚙️ How to Run Locally
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/SriRamCharan-dev/-Roamora.git
-   cd -Roamora
-   ```
+### 1. Clone the repository
+```bash
+git clone https://github.com/SriRamCharan-dev/-Roamora.git
+cd -Roamora
+```
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+### 2. Install dependencies
+```bash
+npm install
+```
 
-3. Set up environment variables:
-   Create a `.env` file in the root directory and populate it with your Google API credentials:
-   ```env
-   GOOGLE_CLIENT_ID=your_google_client_id
-   GOOGLE_CLIENT_SECRET=your_google_client_secret
-   ```
-   > [!NOTE]
-   > You can obtain these credentials by creating a project on the [Google Cloud Console](https://console.cloud.google.com/), enabling the Google+ API (or Google OAuth2 API), and setting the Authorized redirect URI to `http://localhost:5000/auth/google/callback`.
+### 3. Setup environment variables
+Create a `.env` file in the root directory:
+```env
+ATLASDB_URL=mongodb+srv://<username>:<password>@cluster.mongodb.net/roamora?retryWrites=true&w=majority
+SESSION_SECRET=your_long_secure_session_secret
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+CLOUD_API_KEY=your_cloudinary_key
+CLOUD_API_SECRET=your_cloudinary_secret
+CLOUD_NAME=your_cloudinary_name
+```
 
+### 4. Seed the Database
+Ensure your MongoDB local instance is running, or that you have specified an `ATLASDB_URL`. Run:
+```bash
+# Seed initial sample listings
+node init/index.js
 
-4. Ensure MongoDB is running locally:
-   ```bash
-   mongod
-   ```
+# Seed additional category-specific listings (30+ premium stays)
+node init/seed-additional.js
 
-5. Seed the database (if needed):
-   ```bash
-   node init/index.js
-   ```
+# Update listings with correct high-quality Unsplash image assets
+node init/update-images.js
+```
 
-6. Run the app:
-   ```bash
-   nodemon app.js
-   ```
-   Open [http://localhost:5000](http://localhost:5000) in your browser.
+### 5. Run the Application
+```bash
+nodemon app.js
+```
+Open **`http://localhost:5000`** in your browser.
+
+---
+
+## 🚀 Deploying to Render
+
+To deploy this application on [Render](https://render.com/):
+
+### 1. Create a Web Service
+*   Connect your GitHub repository to Render.
+*   Set the **Runtime** to `Node`.
+*   Set the **Build Command** to `npm install`.
+*   Set the **Start Command** to `node app.js`.
+
+### 2. Configure Environment Variables
+In the **Environment** tab of your Render Web Service, add the following variables:
+*   `NODE_ENV` = `production`
+*   `ATLASDB_URL` = Your MongoDB Atlas Connection String
+*   `SESSION_SECRET` = A secure random string for signing sessions
+*   `GOOGLE_CLIENT_ID` = Google Cloud OAuth Client ID
+*   `GOOGLE_CLIENT_SECRET` = Google Cloud OAuth Client Secret
+*   *Note: Render will automatically bind to the dynamic port using `process.env.PORT`.*
