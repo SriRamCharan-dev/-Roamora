@@ -6,7 +6,8 @@ const upload = multer({ storage });
 const wrapAsync = require('../utils/wrapAsync');
 const authorize = require('../appMiddleware');
 const { isListingOwner } = require('../appMiddleware');
-const { validateListing, sanitizeListing } = require('../middleware/validation');
+const { validateListing, sanitizeListing } = require('../validators/validation');
+
 const listingController = require('../controllers/listing');
 
 // Root Route
