@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
 const wrapAsync = require('../utils/wrapAsync');
-const authorize = require('../middleware');
-const { isReviewAuthor } = require('../middleware');
+const authorize = require('../appMiddleware');
+const { isReviewAuthor } = require('../appMiddleware');
+
 const reviewController = require('../controllers/review');
 
 // Post Review Route
