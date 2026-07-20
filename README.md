@@ -11,6 +11,14 @@ Roamora is a design-forward, highly responsive full-stack accommodation discover
 *   **Interactive Reviews**: Dedicated rating stars and feedback card decks for every property.
 *   **Secure Authentication & Session Store**: Secured with username/password flows alongside **Google OAuth 2.0** login capabilities, running on a resilient MongoDB-backed session database using `connect-mongo`.
 *   **Smart Routing**: Built-in authentication middleware to guarantee secure authorization for listing manipulation and listing ownership.
+*   **🎟️ Interactive Mock Booking System**: A fully animated, multi-state booking panel on every listing detail page:
+    *   **Dynamic Price Calculator** — Total cost updates live as check-in/check-out dates are selected, reflecting exact nights, service fees, and grand totals.
+    *   **Input Validation & Shake Animation** — Missing or invalid dates trigger an error banner and a smooth CSS shake animation on the form card.
+    *   **3-Step Loading Sequence** — Clicking "Reserve now" transitions the panel into an animated stepper showing spinning progress icons for: availability check → price lock → token generation.
+    *   **Booking Confirmation Screen** — On completion, a drawing checkmark SVG animation reveals a confirmation card with a random booking ID, selected dates, guest count, and total price.
+    *   **Confetti Burst** — Colorful confetti pieces rain down on successful mock booking.
+    *   **Reset Flow** — A "Cancel / Reset" button returns the panel to its initial state cleanly.
+
 
 ---
 
