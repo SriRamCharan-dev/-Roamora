@@ -2,6 +2,11 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/user');
 
+// Home Route
+router.get('/', (req, res) => {
+    res.render('hero');
+});
+
 // Auth page (card login UI)
 router.get('/login', userController.renderAuthForm);
 router.get('/signup', userController.renderAuthForm);
