@@ -19,7 +19,7 @@ const reviewRoute = require('./routes/review');
 const userRouter = require('./routes/user');
 
 // Clerk — import AFTER dotenv so CLERK_SECRET_KEY is available
-const { ClerkExpressWithAuth } = require('@clerk/clerk-sdk-node');
+const { clerkMiddleware } = require('@clerk/express');
 const { clerkAuthMiddleware } = require('./appMiddleware');
 
 // Trust Vercel's reverse proxy so HTTPS cookies work correctly
@@ -68,7 +68,7 @@ app.use(session(sessionOptions));
 app.use(flash());
 
 // Clerk middleware — initialized ONCE (not per-request)
-app.use(ClerkExpressWithAuth());
+app.use(clerkMiddleware());
 
 app.use((req, res, next) => {
   res.locals.currentUser = null;

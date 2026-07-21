@@ -178,67 +178,72 @@
     </div>
 </div>
 
-<!-- Clerk JS SDK — dynamic load based on publishable key -->
 <script>
-    (function() {
-        const clerkPubKey = '<%= clerkPublishableKey %>';
-        if (!clerkPubKey) {
-            console.error('Clerk Publishable Key is missing!');
-            return;
-        }
-        
-        try {
-            const parts = clerkPubKey.split('_');
-            const encodedDomain = parts[parts.length - 1];
-            const decodedDomain = atob(encodedDomain).replace(/\$$/, '');
-            
-            const script = document.createElement('script');
-            script.setAttribute('data-clerk-publishable-key', clerkPubKey);
-            script.src = `https://${decodedDomain}/npm/@clerk/clerk-js@latest/dist/clerk.browser.js`;
-            script.async = true;
-            script.crossOrigin = 'anonymous';
-            
-            script.onload = async () => {
-                if (!window.Clerk) return;
-                
-                await window.Clerk.load({
-                    appearance: {
-                        variables: {
-                            colorPrimary: '#2f6a56',
-                            colorText: '#1c241f',
-                            colorInputBackground: '#ffffff',
-                            colorInputText: '#1c241f',
-                            borderRadius: '14px',
-                            fontFamily: "'Manrope', sans-serif",
-                        },
-                        elements: {
-                            card: 'box-shadow: none; border: none; padding: 0; background: transparent;',
-                            rootBox: 'width: 100%;',
-                        }
-                    }
-                });
+  (async function initClerk() {
+    const publishableKey = <%- JSON.stringify(clerkPublishableKey || '') %>;
+    const container = document.getElementById('clerk-sign-in');
+    const isSignUpPage = window.location.pathname === '/signup';
 
-                if (window.Clerk.user) {
-                    window.location.replace('/listings');
-                    return;
-                }
+    if (!publishableKey) {
+      container.textContent = 'Authentication is not configured. Please try again later.';
+      console.error('CLERK_PUBLISHABLE_KEY is missing.');
+      return;
+    }
 
-                const container = document.getElementById('clerk-sign-in');
-                if (container) {
-                    window.Clerk.mountSignIn(container, {
-                        forceRedirectUrl: '/listings',
-                        fallbackRedirectUrl: '/listings',
-                        signUpUrl: '/signup',
-                    });
-                }
+    try {
+      const clerkDomain = atob(publishableKey.split('_')[2]).slice(0, -1);
+      const loadScript = (src, attributes = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.async = true;
+        script.crossOrigin = 'anonymous';
+        Object.entries(attributes).forEach(([name, value]) => script.setAttribute(name, value));
+        script.onload = resolve;
+        script.onerror = () => reject(new Error(`Unable to load ${src}`));
+        document.head.appendChild(script);
+      });
 
-                window.Clerk.addListener(({ user }) => {
-                    if (user) window.location.replace('/listings');
-                });
-            };
-            document.head.appendChild(script);
-        } catch (e) {
-            console.error('Error loading Clerk:', e);
-        }
-    })();
+      await loadScript(`https://${clerkDomain}/npm/@clerk/ui@1/dist/ui.browser.js`);
+      await loadScript(`https://${clerkDomain}/npm/@clerk/clerk-js@6/dist/clerk.browser.js`, {
+        'data-clerk-publishable-key': publishableKey,
+      });
+
+      await window.Clerk.load({
+        ui: { ClerkUI: window.__internal_ClerkUICtor },
+        appearance: {
+          variables: {
+            colorPrimary: '#2f6a56',
+            colorText: '#1c241f',
+            colorInputBackground: '#ffffff',
+            colorInputText: '#1c241f',
+            borderRadius: '14px',
+            fontFamily: "'Manrope', sans-serif",
+          },
+          elements: {
+            card: 'box-shadow: none; border: none; padding: 0; background: transparent;',
+            rootBox: 'width: 100%;',
+          },
+        },
+      },
+      );
+
+      if (window.Clerk.isSignedIn) {
+        window.location.replace('/listings');
+        return;
+      }
+
+      const redirectOptions = {
+        forceRedirectUrl: '/listings',
+        fallbackRedirectUrl: '/listings',
+      };
+      if (isSignUpPage) {
+        window.Clerk.mountSignUp(container, { ...redirectOptions, signInUrl: '/login' });
+      } else {
+        window.Clerk.mountSignIn(container, { ...redirectOptions, signUpUrl: '/signup' });
+      }
+    } catch (error) {
+      container.textContent = 'Unable to load authentication. Please refresh and try again.';
+      console.error('Clerk initialization failed:', error);
+    }
+  })();
 </script>

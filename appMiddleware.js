@@ -1,19 +1,28 @@
-const { ClerkExpressWithAuth } = require('@clerk/clerk-sdk-node');
 const User = require('./Models/user');
-const { clerkClient } = require('@clerk/clerk-sdk-node');
+const { clerkClient } = require('@clerk/express');
 
 // Attach Clerk auth info and sync MongoDB user to res.locals
 async function clerkAuthMiddleware(req, res, next) {
     const clerkId = req.auth?.userId;
     if (clerkId) {
         try {
+            // Try to find user by clerkId first
             let user = await User.findOne({ clerkId });
             if (!user) {
+                // Fetch Clerk user info
                 const clerkUser = await clerkClient.users.getUser(clerkId);
                 const email = clerkUser.emailAddresses[0]?.emailAddress || '';
                 const username = clerkUser.username || clerkUser.firstName || email.split('@')[0];
-                user = new User({ clerkId, email, username });
-                await user.save();
+                // Try to find existing user by email to avoid duplicate key error
+                user = await User.findOne({ email });
+                if (!user) {
+                    user = new User({ clerkId, email, username });
+                    await user.save();
+                } else {
+                    // Existing user found by email, associate clerkId
+                    user.clerkId = clerkId;
+                    await user.save();
+                }
             }
             res.locals.currentUser = user;
         } catch (err) {
