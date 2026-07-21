@@ -3,6 +3,7 @@
 Roamora is a design-forward, highly responsive full-stack accommodation discovery platform inspired by Airbnb. It connects design-loving travelers with handpicked, character-filled stays across beaches, mountains, cities, castles, and domes.
 
 ---
+<img width="1920" height="2155" alt="screencapture-roamora-xi-vercel-app-2026-07-21-20_46_32" src="https://github.com/user-attachments/assets/72a3763a-8cd0-4ac5-a3a1-88a92195c8f0" />
 
 ---
 
@@ -16,9 +17,14 @@ Roamora is a design-forward, highly responsive full-stack accommodation discover
 *   **Secure Authentication & Session Store**: Secured with custom local username/password authentication, running on a resilient MongoDB-backed session database using `connect-mongo`.
 *   **Smart Routing**: Built-in authentication middleware to guarantee secure authorization for listing manipulation and listing ownership.
 *   **🎟️ Interactive Mock Booking System**: A fully animated, multi-state booking panel on every listing detail page.
+*   <img width="634" height="805" alt="Screenshot Capture - 2026-07-21 - 21-00-43" src="https://github.com/user-attachments/assets/2f96cf0e-54b4-4ce2-8a5c-733afefaeed7" />
+
 
 ---
-*(Add App Screenshot Here - Listings/Filter Page)*
+<img width="1920" height="4275" alt="screencapture-roamora-xi-vercel-app-listings-6a5d1302d7ac245d379a227a-2026-07-21-20_57_16" src="https://github.com/user-attachments/assets/ce4c11df-c2dd-4312-a696-25462581d00c" />
+<img width="1897" height="799" alt="Screenshot Capture - 2026-07-21 - 20-56-17" src="https://github.com/user-attachments/assets/a1fd8736-3209-4194-b150-54e2903159e6" />
+<img width="1867" height="775" alt="Screenshot Capture - 2026-07-21 - 20-56-31" src="https://github.com/user-attachments/assets/46aba615-e0c0-4364-ab1d-84567504a64d" />
+
 ---
 
 ## 🛠️ Our Approach & Architecture
@@ -33,7 +39,8 @@ The architecture of Roamora follows a monolithic MVC (Model-View-Controller) des
 *   **Styling**: Pure CSS (no heavy UI libraries), maintaining a lightweight bundle with a sophisticated, highly customizable UI.
 
 ---
-*(Add App Screenshot Here - Single Listing / Booking Page)*
+<img width="1920" height="4275" alt="screencapture-roamora-xi-vercel-app-listings-6a5d1302d7ac245d379a227a-2026-07-21-20_57_16" src="https://github.com/user-attachments/assets/3ac3db34-bd68-4e74-9225-145b27d5e779" />
+
 ---
 
 ## 🔌 API & Services
@@ -66,7 +73,8 @@ The architecture of Roamora follows a monolithic MVC (Model-View-Controller) des
 *   `GET /logout` - Destroys the current user session.
 
 ---
-*(Add App Screenshot Here - Login / Signup Page)*
+<img width="1920" height="1579" alt="screencapture-roamora-xi-vercel-app-login-2026-07-21-20_58_08" src="https://github.com/user-attachments/assets/7cea7d3f-8e70-4223-b590-c827fd870cd3" />
+
 ---
 
 ## ⚙️ How to Run Locally
@@ -112,7 +120,7 @@ npm start
 Open **`http://localhost:5000`** in your browser.
 
 ---
-*(Add App Screenshot Here - Dark Mode / Theme Toggling)*
+<img width="1897" height="940" alt="Screenshot Capture - 2026-07-21 - 20-59-12" src="https://github.com/user-attachments/assets/b6038ae5-b553-4e8f-abd3-9bb95ce38439" />
 ---
 
 ## 🚀 Deploying to Render
