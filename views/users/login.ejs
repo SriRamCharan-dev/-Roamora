@@ -1,45 +1,150 @@
 <% layout('layouts/boilerplate') %>
 
-<section class="page-section">
-    <div class="container-shell form-shell">
-        <div class="form-panel">
-            <div class="form-hero">
-                <div class="form-copy-card">
-                    <div class="hero-badge"><i class="fa-solid fa-right-to-bracket"></i> Welcome Back</div>
-                    <h1>Log in to Roamora</h1>
-                    <p class="muted-copy">Access your account to book stays, host properties, or review your recent travel experiences.</p>
-                </div>
-                <div class="form-tip-card">
-                    <h2 class="section-heading" style="font-size:1.45rem;">Looking for stays?</h2>
-                    <p class="muted-copy">Explore standout homes, warm escapes, and design-forward properties. Simply log in or sign up to interact with listing authors and reviews.</p>
-                </div>
+<style>
+    .auth-card-wrapper {
+        min-height: calc(100vh - 160px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+    }
+
+    .auth-card {
+        background: var(--surface-strong);
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-xl, 24px);
+        padding: 40px 36px;
+        width: min(440px, 100%);
+        box-shadow: 0 20px 50px rgba(24, 50, 42, 0.08);
+    }
+
+    .auth-card-header {
+        text-align: center;
+        margin-bottom: 28px;
+    }
+
+    .auth-card-logo {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--brand-moss);
+        text-decoration: none;
+        margin-bottom: 12px;
+    }
+
+    .auth-card-header h2 {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: var(--brand-ink);
+        margin: 0 0 6px;
+        letter-spacing: -0.03em;
+    }
+
+    .auth-card-header p {
+        color: var(--text-soft);
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .auth-form-group {
+        margin-bottom: 18px;
+    }
+
+    .auth-form-group label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--brand-ink);
+        margin-bottom: 6px;
+    }
+
+    .auth-form-control {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 12px;
+        border: 1px solid var(--border-soft);
+        background: var(--surface-tint);
+        font-size: 0.95rem;
+        color: var(--brand-ink);
+        font-family: inherit;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .auth-form-control:focus {
+        outline: none;
+        border-color: var(--brand-moss);
+        box-shadow: 0 0 0 3px rgba(47, 106, 86, 0.15);
+    }
+
+    .auth-btn-primary {
+        width: 100%;
+        padding: 13px;
+        border-radius: 12px;
+        border: none;
+        background: var(--brand-moss);
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: background-color 0.2s ease, transform 0.1s ease;
+        margin-top: 8px;
+    }
+
+    .auth-btn-primary:hover {
+        background-color: #245242;
+    }
+
+    .auth-card-footer {
+        text-align: center;
+        margin-top: 24px;
+        font-size: 0.88rem;
+        color: var(--text-soft);
+        border-top: 1px solid var(--border-soft);
+        padding-top: 18px;
+    }
+
+    .auth-card-footer a {
+        color: var(--brand-moss);
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .auth-card-footer a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="auth-card-wrapper">
+    <div class="auth-card">
+        <div class="auth-card-header">
+            <a href="/" class="auth-card-logo">
+                <i class="fa-brands fa-airbnb"></i>
+                <span>Roamora</span>
+            </a>
+            <h2>Welcome Back</h2>
+            <p>Log in to access your account</p>
+        </div>
+
+        <form action="/login" method="POST" class="needs-validation" novalidate>
+            <div class="auth-form-group">
+                <label for="username">Username or Email</label>
+                <input type="text" id="username" name="username" placeholder="Enter username or email" class="auth-form-control" required autofocus>
+                <div class="invalid-feedback">Please enter your username or email.</div>
             </div>
 
-            <form action="/login" method="POST" class="needs-validation" novalidate>
-                <div class="form-grid">
-                    <div class="field-group full-span">
-                        <label for="username">Username <span class="required-mark">*</span></label>
-                        <input type="text" id="username" name="username" placeholder="Enter your username" class="form-control" required>
-                        <div class="invalid-feedback">Please enter your username.</div>
-                        <div class="valid-feedback">Looks good!</div>
-                    </div>
+            <div class="auth-form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter password" class="auth-form-control" required>
+                <div class="invalid-feedback">Please enter your password.</div>
+            </div>
 
-                    <div class="field-group full-span">
-                        <label for="password">Password <span class="required-mark">*</span></label>
-                        <input type="password" id="password" name="password" placeholder="Enter your password" class="form-control" required>
-                        <div class="invalid-feedback">Please enter your password.</div>
-                        <div class="valid-feedback">Looks good!</div>
-                    </div>
-                </div>
+            <button class="auth-btn-primary" type="submit">Log In</button>
+        </form>
 
-                <div class="form-actions" style="flex-direction: column; align-items: stretch; gap: 16px;">
-                    <button class="btn-primary" type="submit" style="width: 100%;">Log In</button>
-                    <div style="text-align: center; font-size: 0.95rem; margin-top: 12px;">
-                        New to Roamora? <a href="/signup" style="font-weight: 700; color: var(--brand-moss); text-decoration: underline;">Create an account</a>
-                    </div>
-                </div>
-
-            </form>
+        <div class="auth-card-footer">
+            New to Roamora? <a href="/signup">Create an account</a>
         </div>
     </div>
-</section>
+</div>
