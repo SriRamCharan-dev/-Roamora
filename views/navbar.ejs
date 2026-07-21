@@ -88,9 +88,13 @@
                 background: rgba(10,16,13,0.48);
                 z-index: 998;
                 opacity: 0;
+                pointer-events: none;
                 transition: opacity 0.25s ease;
             }
-            .mobile-menu-overlay.open { opacity: 1; }
+            .mobile-menu-overlay.open { 
+                opacity: 1; 
+                pointer-events: auto;
+            }
 
             .mobile-menu-drawer {
                 position: fixed;
