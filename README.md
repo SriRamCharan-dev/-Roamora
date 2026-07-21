@@ -2,6 +2,8 @@
 
 Roamora is a design-forward, highly responsive full-stack accommodation discovery platform inspired by Airbnb. It connects design-loving travelers with handpicked, character-filled stays across beaches, mountains, cities, castles, and domes.
 
+**🚀 Live Demo:** [https://roamora-two.vercel.app](https://roamora-two.vercel.app)
+
 ---
 <img width="1920" height="2155" alt="screencapture-roamora-xi-vercel-app-2026-07-21-20_46_32" src="https://github.com/user-attachments/assets/72a3763a-8cd0-4ac5-a3a1-88a92195c8f0" />
 
@@ -14,7 +16,7 @@ Roamora is a design-forward, highly responsive full-stack accommodation discover
 *   **Smart Category Filters & Search**: Real-time client-side search filtering matched with custom property tags like 🏰 **Castles**, 🏊 **Amazing Pools**, ⛺ **Camping**, 🚜 **Farms**, ❄️ **Arctic**, 🔮 **Domes**, ⛵ **Boats**, and 🛏️ **Rooms**.
 *   **Bespoke Dark & Light Mode**: Smooth theme toggling styled with modern CSS variables, persisting client settings seamlessly in `localStorage`.
 *   **Interactive Reviews**: Dedicated rating stars and feedback card decks for every property.
-*   **Secure Authentication & Session Store**: Secured with custom local username/password authentication, running on a resilient MongoDB-backed session database using `connect-mongo`.
+*   **Secure Authentication**: Local username/password authentication, resilient sessions via `connect-mongo`, and passwords cryptographically hashed with `bcrypt`.
 *   **Smart Routing**: Built-in authentication middleware to guarantee secure authorization for listing manipulation and listing ownership.
 *   **🎟️ Interactive Mock Booking System**: A fully animated, multi-state booking panel on every listing detail page.
 *   <img width="634" height="805" alt="Screenshot Capture - 2026-07-21 - 21-00-43" src="https://github.com/user-attachments/assets/2f96cf0e-54b4-4ce2-8a5c-733afefaeed7" />
