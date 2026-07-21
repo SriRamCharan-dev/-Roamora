@@ -11,7 +11,7 @@ const engine = require('ejs-mate');
 const morgan = require('morgan');
 const session = require('express-session');
 const flash = require('connect-flash');
-const MongoStore = require('connect-mongo');
+const { MongoStore } = require('connect-mongo');
 
 const ExpressError = require('./utils/ExpressError');
 const listingRouter = require('./routes/listing');
