@@ -27,7 +27,7 @@ Roamora is a design-forward, highly responsive full-stack accommodation discover
 
 ---
 
-## 🛠️ Our Approach & Architecture
+## 🛠️ My Approach & Architecture
 
 The architecture of Roamora follows a monolithic MVC (Model-View-Controller) design pattern. The application uses server-side rendering (SSR) via EJS, combined with modern vanilla JavaScript on the frontend for interactive elements (such as dark mode toggling and mobile menus).
 
@@ -48,7 +48,7 @@ The architecture of Roamora follows a monolithic MVC (Model-View-Controller) des
 ### **Third-Party Services Integration**
 *   **MongoDB Atlas**: Managed cloud database service used for persistent data storage.
 *   **Cloudinary**: Cloud-based image management service for uploading, storing, and serving high-resolution listing images.
-*   **Render**: (Or Vercel) Cloud application hosting platform for seamless deployment.
+*   **Vercel**: Cloud application hosting platform for seamless deployment.
 
 ### **Core API Routes**
 
@@ -123,19 +123,19 @@ Open **`http://localhost:5000`** in your browser.
 <img width="1897" height="940" alt="Screenshot Capture - 2026-07-21 - 20-59-12" src="https://github.com/user-attachments/assets/b6038ae5-b553-4e8f-abd3-9bb95ce38439" />
 ---
 
-## 🚀 Deploying to Render
+## 🚀 Deploying to Vercel
 
-To deploy this application on [Render](https://render.com/):
+To deploy this application on [Vercel](https://vercel.com/):
 
-### 1. Create a Web Service
-*   Connect your GitHub repository to Render.
-*   Set the **Runtime** to `Node`.
-*   Set the **Build Command** to `npm install`.
-*   Set the **Start Command** to `node app.js`.
+### 1. Import Project
+*   Connect your GitHub repository to Vercel and import the project.
+*   Vercel will automatically use the existing `vercel.json` file for deployment configuration.
 
 ### 2. Configure Environment Variables
-In the **Environment** tab of your Render Web Service, add the following variables:
+In the **Environment Variables** settings of your Vercel project, add the following variables:
 *   `NODE_ENV` = `production`
 *   `ATLASDB_URL` = Your MongoDB Atlas Connection String
 *   `SESSION_SECRET` = A secure random string for signing sessions
-*   *Note: Render will automatically bind to the dynamic port using `process.env.PORT`.*
+*   `CLOUD_API_KEY` = your_cloudinary_key
+*   `CLOUD_API_SECRET` = your_cloudinary_secret
+*   `CLOUD_NAME` = your_cloudinary_name
