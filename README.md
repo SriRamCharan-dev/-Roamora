@@ -15,6 +15,7 @@ Roamora is a design-forward, highly responsive full-stack accommodation discover
 *   **Smart Category Filters & Search**: Real-time client-side search filtering matched with custom property tags like 🏰 **Castles**, 🏊 **Amazing Pools**, ⛺ **Camping**, 🚜 **Farms**, ❄️ **Arctic**, 🔮 **Domes**, ⛵ **Boats**, and 🛏️ **Rooms**.
 *   **Bespoke Dark & Light Mode**: Smooth theme toggling styled with modern CSS variables, persisting client settings seamlessly in `localStorage`.
 *   **Interactive Reviews**: Dedicated rating stars and feedback card decks for every property.
+*   **Interactive Maps**: Real-time property location rendering using Leaflet and OpenStreetMap, with automatic geocoding via LocationIQ.
 *   **Secure Authentication**: Local username/password authentication, resilient sessions via `connect-mongo`, and passwords cryptographically hashed with `bcrypt`.
 *   **Smart Routing**: Built-in authentication middleware to guarantee secure authorization for listing manipulation and listing ownership.
 *   **🎟️ Interactive Mock Booking System**: A fully animated, multi-state booking panel on every listing detail page.
@@ -59,7 +60,6 @@ The architecture of Roamora follows a monolithic MVC (Model-View-Controller) des
 
 *   **Mock Booking**: The current booking system simulates checkout flows visually. Real payment integration (e.g., Stripe) is planned for a future release.
 *   **Testing**: Automated tests are not yet implemented. A comprehensive testing suite utilizing Jest and Supertest is on the roadmap.
-*   **Map Integration**: Advanced geocoding and interactive clustering using Mapbox are actively being refined.
 
 ---
 
