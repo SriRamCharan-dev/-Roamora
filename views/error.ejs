@@ -1,0 +1,20 @@
+<% layout('layouts/boilerplate') %>
+
+<section class="page-section">
+    <div class="container-shell">
+        <div style="max-width: 600px; margin: 60px auto; text-align: center; padding: 40px 24px; background: var(--surface-strong); border-radius: var(--radius-xl); border: 1px solid var(--border-soft); box-shadow: var(--shadow-card);">
+            <div style="font-size: 4rem; font-weight: 800; color: var(--brand-moss); margin-bottom: 10px;">
+                <%= typeof statusCode !== 'undefined' ? statusCode : 500 %>
+            </div>
+            <h2 style="font-size: 1.8rem; font-weight: 800; color: var(--brand-ink); margin-bottom: 16px;">
+                <%= typeof message !== 'undefined' ? message : 'Something went wrong!' %>
+            </h2>
+            <p class="section-subtext" style="margin-bottom: 30px;">
+                We couldn't process your request. Please check the URL or return to the main listings page.
+            </p>
+            <a href="/listings" class="btn-primary" style="display: inline-block;">
+                <i class="fa-solid fa-house" style="margin-right: 8px;"></i> Back to Explore stays
+            </a>
+        </div>
+    </div>
+</section>
