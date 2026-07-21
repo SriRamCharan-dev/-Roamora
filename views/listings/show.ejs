@@ -107,7 +107,7 @@
                         </h5>
                         <h5>Rating: <%= review.rating %> <i class="fa-solid fa-star" style="color:#f2a84a;"></i></h5>
                         <p><%= review.comment %></p>
-                        <% if (currentUser && review.author && review.author.clerkId === currentUser.clerkId) { %>
+                        <% if (currentUser && review.author && (review.author._id.equals ? review.author._id.equals(currentUser._id) : review.author._id.toString() === currentUser._id.toString())) { %>
                         <form method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
                             <button class="btn-danger" type="submit">Delete review</button>
                         </form>
@@ -313,7 +313,7 @@
                     <button class="btn-secondary" type="button" style="width:100%;" id="resetBookingBtn">Cancel / Reset Mock Stay</button>
                 </div>
 
-                <% if (currentUser && listing.owner && currentUser.clerkId === listing.owner.clerkId) { %>
+                <% if (currentUser && listing.owner && (listing.owner._id.equals ? listing.owner._id.equals(currentUser._id) : listing.owner._id.toString() === currentUser._id.toString())) { %>
                 <div class="form-actions" style="margin-top:24px;" id="ownerActions">
                     <a href="/listings/<%= listing._id %>/edit" class="btn-secondary">Edit listing</a>
                     <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">

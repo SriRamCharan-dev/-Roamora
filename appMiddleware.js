@@ -1,32 +1,13 @@
 const User = require('./Models/user');
-const { clerkClient } = require('@clerk/express');
 
-// Attach Clerk auth info and sync MongoDB user to res.locals
-async function clerkAuthMiddleware(req, res, next) {
-    const clerkId = req.auth?.userId;
-    if (clerkId) {
+// Attach session user to res.locals
+async function loadCurrentUser(req, res, next) {
+    if (req.session && req.session.userId) {
         try {
-            // Try to find user by clerkId first
-            let user = await User.findOne({ clerkId });
-            if (!user) {
-                // Fetch Clerk user info
-                const clerkUser = await clerkClient.users.getUser(clerkId);
-                const email = clerkUser.emailAddresses[0]?.emailAddress || '';
-                const username = clerkUser.username || clerkUser.firstName || email.split('@')[0];
-                // Try to find existing user by email to avoid duplicate key error
-                user = await User.findOne({ email });
-                if (!user) {
-                    user = new User({ clerkId, email, username });
-                    await user.save();
-                } else {
-                    // Existing user found by email, associate clerkId
-                    user.clerkId = clerkId;
-                    await user.save();
-                }
-            }
-            res.locals.currentUser = user;
+            const user = await User.findById(req.session.userId);
+            res.locals.currentUser = user || null;
         } catch (err) {
-            console.error('Clerk user sync error:', err.message);
+            console.error('Error fetching session user:', err.message);
             res.locals.currentUser = null;
         }
     } else {
@@ -36,9 +17,10 @@ async function clerkAuthMiddleware(req, res, next) {
 }
 
 function authorize(req, res, next) {
-    if (!req.auth?.userId) {
+    if (!req.session || !req.session.userId) {
         req.session = req.session || {};
         req.session.returnTo = req.originalUrl;
+        req.flash('error', 'You must be logged in first!');
         return res.redirect('/login');
     }
     next();
@@ -49,14 +31,15 @@ const Review = require('./Models/review');
 
 async function isListingOwner(req, res, next) {
     const { id } = req.params;
-    const listing = await Listing.findById(id).populate('owner', '_id clerkId');
+    const listing = await Listing.findById(id).populate('owner');
 
     if (!listing) {
+        req.flash('error', 'Listing not found!');
         return res.redirect('/listings');
     }
 
-    const clerkId = req.auth?.userId;
-    if (!listing.owner || !clerkId || listing.owner.clerkId !== clerkId) {
+    if (!res.locals.currentUser || !listing.owner || !listing.owner._id.equals(res.locals.currentUser._id)) {
+        req.flash('error', 'You do not have permission to edit/delete this listing!');
         return res.redirect(`/listings/${id}`);
     }
     next();
@@ -64,21 +47,22 @@ async function isListingOwner(req, res, next) {
 
 async function isReviewAuthor(req, res, next) {
     const { id, reviewId } = req.params;
-    const review = await Review.findById(reviewId).populate('author', '_id clerkId');
+    const review = await Review.findById(reviewId).populate('author');
 
     if (!review) {
+        req.flash('error', 'Review not found!');
         return res.redirect(`/listings/${id}`);
     }
 
-    const clerkId = req.auth?.userId;
-    if (!review.author || !clerkId || review.author.clerkId !== clerkId) {
+    if (!res.locals.currentUser || !review.author || !review.author._id.equals(res.locals.currentUser._id)) {
+        req.flash('error', 'You do not have permission to delete this review!');
         return res.redirect(`/listings/${id}`);
     }
     next();
 }
 
 module.exports = authorize;
-module.exports.clerkAuthMiddleware = clerkAuthMiddleware;
+module.exports.loadCurrentUser = loadCurrentUser;
 module.exports.authorize = authorize;
 module.exports.isListingOwner = isListingOwner;
 module.exports.isReviewAuthor = isReviewAuthor;

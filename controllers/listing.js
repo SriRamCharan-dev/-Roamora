@@ -72,7 +72,7 @@ module.exports.createListing = async (req, res, next) => {
     location,
     country,
     geometry,
-    owner: req.user._id,
+    owner: res.locals.currentUser && res.locals.currentUser._id,
   });
 
   let savedListing = await newListing.save();

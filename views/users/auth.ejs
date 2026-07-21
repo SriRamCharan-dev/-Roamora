@@ -171,8 +171,8 @@
 
         <!-- Right: Clerk Sign-In Widget -->
         <div class="auth-form-panel">
-            <h3>Welcome back</h3>
-            <p>Sign in or create a new account</p>
+            <h3 id="auth-title">Welcome back</h3>
+            <p id="auth-subtitle">Sign in or create a new account</p>
             <div id="clerk-sign-in"></div>
         </div>
     </div>
@@ -182,16 +182,39 @@
   (async function initClerk() {
     const publishableKey = <%- JSON.stringify(clerkPublishableKey || '') %>;
     const container = document.getElementById('clerk-sign-in');
+    const title = document.getElementById('auth-title');
+    const subtitle = document.getElementById('auth-subtitle');
     const isSignUpPage = window.location.pathname === '/signup';
+    const requestedProvider = new URLSearchParams(window.location.search).get('provider');
 
     if (!publishableKey) {
-      container.textContent = 'Authentication is not configured. Please try again later.';
+      container.innerHTML = '<p style="color:#b14646;font-size:0.9rem;">Authentication is not configured. Please try again later.</p>';
       console.error('CLERK_PUBLISHABLE_KEY is missing.');
       return;
     }
 
     try {
-      const clerkDomain = atob(publishableKey.split('_')[2]).slice(0, -1);
+      title.textContent = isSignUpPage ? 'Create your account' : 'Welcome back';
+      subtitle.textContent = requestedProvider === 'google'
+        ? 'Continue with Google to sign in to Roamora.'
+        : 'Sign in or create a new account';
+
+      // Decode Clerk frontend API domain from publishable key
+      const decodeBase64Url = (value) => {
+        const normalized = value.replace(/-/g, '+').replace(/_/g, '/');
+        const padding = '='.repeat((4 - (normalized.length % 4)) % 4);
+        return atob(`${normalized}${padding}`);
+      };
+
+      const getClerkDomain = (key) => {
+        const parts = key.split('_');
+        if (parts.length < 3) throw new Error('Invalid Clerk publishable key format.');
+        const decodedDomain = decodeBase64Url(parts.slice(2).join('_'));
+        return decodedDomain.endsWith('$') ? decodedDomain.slice(0, -1) : decodedDomain;
+      };
+
+      const clerkDomain = getClerkDomain(publishableKey);
+
       const loadScript = (src, attributes = {}) => new Promise((resolve, reject) => {
         const script = document.createElement('script');
         script.src = src;
@@ -203,13 +226,12 @@
         document.head.appendChild(script);
       });
 
-      await loadScript(`https://${clerkDomain}/npm/@clerk/ui@1/dist/ui.browser.js`);
-      await loadScript(`https://${clerkDomain}/npm/@clerk/clerk-js@6/dist/clerk.browser.js`, {
+      // Load Clerk UI components then Clerk JS (Clerk's recommended loading order)
+      await loadScript(`https://${clerkDomain}/npm/@clerk/clerk-js@5/dist/clerk.browser.js`, {
         'data-clerk-publishable-key': publishableKey,
       });
 
       await window.Clerk.load({
-        ui: { ClerkUI: window.__internal_ClerkUICtor },
         appearance: {
           variables: {
             colorPrimary: '#2f6a56',
@@ -220,14 +242,13 @@
             fontFamily: "'Manrope', sans-serif",
           },
           elements: {
-            card: 'box-shadow: none; border: none; padding: 0; background: transparent;',
-            rootBox: 'width: 100%;',
+            card: { boxShadow: 'none', border: 'none', padding: '0', background: 'transparent' },
+            rootBox: { width: '100%' },
           },
         },
-      },
-      );
+      });
 
-      if (window.Clerk.isSignedIn) {
+      if (window.Clerk.user) {
         window.location.replace('/listings');
         return;
       }
@@ -236,13 +257,14 @@
         forceRedirectUrl: '/listings',
         fallbackRedirectUrl: '/listings',
       };
+
       if (isSignUpPage) {
         window.Clerk.mountSignUp(container, { ...redirectOptions, signInUrl: '/login' });
       } else {
         window.Clerk.mountSignIn(container, { ...redirectOptions, signUpUrl: '/signup' });
       }
     } catch (error) {
-      container.textContent = 'Unable to load authentication. Please refresh and try again.';
+      container.innerHTML = '<p style="color:#b14646;font-size:0.9rem;">Unable to load authentication. Please refresh and try again.</p>';
       console.error('Clerk initialization failed:', error);
     }
   })();

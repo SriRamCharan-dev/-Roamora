@@ -18,9 +18,7 @@ const listingRouter = require('./routes/listing');
 const reviewRoute = require('./routes/review');
 const userRouter = require('./routes/user');
 
-// Clerk — import AFTER dotenv so CLERK_SECRET_KEY is available
-const { clerkMiddleware } = require('@clerk/express');
-const { clerkAuthMiddleware } = require('./appMiddleware');
+const { loadCurrentUser } = require('./appMiddleware');
 
 // Trust Vercel's reverse proxy so HTTPS cookies work correctly
 app.set('trust proxy', 1);
@@ -67,21 +65,14 @@ const sessionOptions = {
 app.use(session(sessionOptions));
 app.use(flash());
 
-// Clerk middleware — initialized ONCE (not per-request)
-app.use(clerkMiddleware());
+// Load logged-in user from session
+app.use(loadCurrentUser);
 
 app.use((req, res, next) => {
-  res.locals.currentUser = null;
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
-  res.locals.clerkPublishableKey = process.env.CLERK_PUBLISHABLE_KEY
-    || process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
-    || '';
   next();
 });
-
-// Sync Clerk user to MongoDB, expose currentUser to all EJS views
-app.use(clerkAuthMiddleware);
 
 app.use('/listings', listingRouter);
 app.use('/listings/:id/reviews', reviewRoute);
