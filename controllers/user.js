@@ -1,57 +1,23 @@
 const User = require('../Models/user');
+const { clerkClient } = require('@clerk/clerk-sdk-node');
 
-module.exports.renderSignupForm = (req, res) => {
-    res.render('users/signup');
-};
-
-module.exports.signup = async (req, res) => {
-    try {
-        const { username, email, password } = req.body;
-        const user = new User({ username, email });
-        let registeredUser = await User.register(user, password);
-        console.log(registeredUser);
-        req.login(registeredUser, function (err) {
-            if (err) {
-                req.flash('error', 'Something went wrong.');
-                return res.redirect('/signup');
-            }
-            req.flash('success', 'Welcome to Roamora!');
-            const redirectUrl = req.session.returnTo || '/listings';
-            delete req.session.returnTo;
-            res.redirect(redirectUrl);
-        });
+// Sync Clerk user into MongoDB on first login
+async function syncClerkUser(clerkId) {
+    let user = await User.findOne({ clerkId });
+    if (!user) {
+        const clerkUser = await clerkClient.users.getUser(clerkId);
+        const email = clerkUser.emailAddresses[0]?.emailAddress || '';
+        const username = clerkUser.username || clerkUser.firstName || email.split('@')[0];
+        user = new User({ clerkId, email, username });
+        await user.save();
     }
-    catch (err) {
-        req.flash('error', err.message);
-        res.redirect('/signup');
-    }
-};
+    return user;
+}
 
-module.exports.renderLoginForm = (req, res) => {
-    res.render('users/login');
-};
-
-module.exports.login = async (req, res) => {
-    req.flash('success', 'Welcome back to Roamora!');
-    const redirectUrl = req.session.returnTo || '/listings';
-    delete req.session.returnTo;
-    res.redirect(redirectUrl);
+module.exports.renderAuthForm = (req, res) => {
+    res.render('users/auth');
 };
 
 module.exports.logout = (req, res) => {
-    req.logout(function (err) {
-        if (err) {
-            req.flash('error', 'Something went wrong.');
-            return res.redirect('/listings');
-        }
-        req.flash('success', 'You have been logged out.');
-        res.redirect('/listings');
-    });
-};
-
-module.exports.googleCallback = (req, res) => {
-    req.flash('success', 'Welcome back to Roamora!');
-    const redirectUrl = req.session.returnTo || '/listings';
-    delete req.session.returnTo;
-    res.redirect(redirectUrl);
+    res.redirect('/listings');
 };

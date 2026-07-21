@@ -1,0 +1,217 @@
+<% layout('layouts/boilerplate') %>
+
+<style>
+    .auth-shell {
+        min-height: calc(100vh - 80px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+    }
+
+    .auth-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        width: min(900px, 100%);
+        border-radius: var(--radius-xl);
+        overflow: hidden;
+        box-shadow: 0 32px 80px rgba(24, 50, 42, 0.14);
+        border: 1px solid var(--border-soft);
+    }
+
+    /* Left panel — branding */
+    .auth-brand-panel {
+        background: linear-gradient(145deg, #18322a 0%, #2f6a56 60%, #3d8a70 100%);
+        padding: 52px 44px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .auth-brand-panel::before {
+        content: '';
+        position: absolute;
+        top: -60px; right: -60px;
+        width: 220px; height: 220px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 50%;
+    }
+
+    .auth-brand-panel::after {
+        content: '';
+        position: absolute;
+        bottom: -40px; left: -40px;
+        width: 180px; height: 180px;
+        background: rgba(245, 183, 153, 0.12);
+        border-radius: 50%;
+    }
+
+    .auth-brand-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #fff;
+        text-decoration: none;
+        position: relative;
+        z-index: 1;
+    }
+
+    .auth-brand-logo i { color: #f5b799; }
+
+    .auth-brand-copy {
+        position: relative;
+        z-index: 1;
+    }
+
+    .auth-brand-copy h2 {
+        color: #fff;
+        font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        margin: 0 0 14px;
+        line-height: 1.2;
+    }
+
+    .auth-brand-copy p {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .auth-brand-features {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .auth-feature-pill {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 100px;
+        padding: 8px 16px;
+        font-size: 0.85rem;
+        color: rgba(255,255,255,0.88);
+        border: 1px solid rgba(255,255,255,0.12);
+        backdrop-filter: blur(4px);
+        width: fit-content;
+    }
+
+    .auth-feature-pill i { color: #f5b799; }
+
+    /* Right panel — Clerk widget */
+    .auth-form-panel {
+        background: var(--surface-strong);
+        padding: 48px 44px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .auth-form-panel h3 {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: var(--brand-ink);
+        margin: 0 0 6px;
+        letter-spacing: -0.03em;
+    }
+
+    .auth-form-panel p {
+        color: var(--text-soft);
+        font-size: 0.9rem;
+        margin: 0 0 28px;
+    }
+
+    #clerk-sign-in {
+        width: 100%;
+    }
+
+    /* Responsive */
+    @media (max-width: 680px) {
+        .auth-wrapper {
+            grid-template-columns: 1fr;
+        }
+        .auth-brand-panel {
+            padding: 36px 28px;
+            gap: 28px;
+        }
+    }
+</style>
+
+<div class="auth-shell">
+    <div class="auth-wrapper">
+        <!-- Left: Branding Panel -->
+        <div class="auth-brand-panel">
+            <a href="/" class="auth-brand-logo">
+                <i class="fa-brands fa-airbnb"></i>
+                <span>Roamora</span>
+            </a>
+
+            <div class="auth-brand-copy">
+                <h2>Your next stay is one click away.</h2>
+                <p>Discover handpicked stays across beaches, mountains, cities, and beyond.</p>
+            </div>
+
+            <div class="auth-brand-features">
+                <div class="auth-feature-pill"><i class="fa-solid fa-star"></i> 4.7 avg. guest rating</div>
+                <div class="auth-feature-pill"><i class="fa-solid fa-shield-halved"></i> Secure & private</div>
+                <div class="auth-feature-pill"><i class="fa-solid fa-bolt"></i> Instant booking</div>
+            </div>
+        </div>
+
+        <!-- Right: Clerk Sign-In Widget -->
+        <div class="auth-form-panel">
+            <h3>Welcome back</h3>
+            <p>Sign in or create a new account</p>
+            <div id="clerk-sign-in"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Clerk JavaScript SDK -->
+<script async
+    crossorigin="anonymous"
+    data-clerk-publishable-key="<%= clerkPublishableKey %>"
+    src="https://welcomed-man-19.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
+    type="text/javascript"
+></script>
+
+<script>
+    window.addEventListener('load', async () => {
+        if (!window.Clerk) return;
+        await window.Clerk.load({
+            appearance: {
+                variables: {
+                    colorPrimary: '#2f6a56',
+                    colorText: '#1c241f',
+                    colorInputBackground: '#ffffff',
+                    colorInputText: '#1c241f',
+                    borderRadius: '14px',
+                    fontFamily: "'Manrope', sans-serif",
+                },
+                elements: {
+                    card: 'box-shadow: none; border: none; padding: 0;',
+                    rootBox: 'width: 100%;',
+                }
+            }
+        });
+
+        const signInDiv = document.getElementById('clerk-sign-in');
+        window.Clerk.mountSignIn(signInDiv, {
+            afterSignInUrl: '/listings',
+            afterSignUpUrl: '/listings',
+            signUpUrl: '/signup',
+            signInUrl: '/login',
+        });
+    });
+</script>

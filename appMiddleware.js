@@ -1,6 +1,34 @@
+const { ClerkExpressWithAuth } = require('@clerk/clerk-sdk-node');
+const User = require('./Models/user');
+const { clerkClient } = require('@clerk/clerk-sdk-node');
+
+// Attach Clerk auth info and sync MongoDB user to res.locals
+async function clerkAuthMiddleware(req, res, next) {
+    const clerkId = req.auth?.userId;
+    if (clerkId) {
+        try {
+            let user = await User.findOne({ clerkId });
+            if (!user) {
+                const clerkUser = await clerkClient.users.getUser(clerkId);
+                const email = clerkUser.emailAddresses[0]?.emailAddress || '';
+                const username = clerkUser.username || clerkUser.firstName || email.split('@')[0];
+                user = new User({ clerkId, email, username });
+                await user.save();
+            }
+            res.locals.currentUser = user;
+        } catch (err) {
+            console.error('Clerk user sync error:', err.message);
+            res.locals.currentUser = null;
+        }
+    } else {
+        res.locals.currentUser = null;
+    }
+    next();
+}
+
 function authorize(req, res, next) {
-    if (!req.isAuthenticated()) {
-        req.flash('error', 'You must be signed in to create a new listing.');
+    if (!req.auth?.userId) {
+        req.session = req.session || {};
         req.session.returnTo = req.originalUrl;
         return res.redirect('/login');
     }
@@ -12,38 +40,36 @@ const Review = require('./Models/review');
 
 async function isListingOwner(req, res, next) {
     const { id } = req.params;
-    const listing = await Listing.findById(id).populate('owner', '_id');
+    const listing = await Listing.findById(id).populate('owner', '_id clerkId');
 
     if (!listing) {
-        req.flash('error', 'Listing you requested for does not exist!');
         return res.redirect('/listings');
     }
 
-    if (!listing.owner || !req.user || !listing.owner._id.equals(req.user._id)) {
-        req.flash('error', 'You are not allowed to modify this listing.');
+    const clerkId = req.auth?.userId;
+    if (!listing.owner || !clerkId || listing.owner.clerkId !== clerkId) {
         return res.redirect(`/listings/${id}`);
     }
-
     next();
 }
 
 async function isReviewAuthor(req, res, next) {
     const { id, reviewId } = req.params;
-    const review = await Review.findById(reviewId);
+    const review = await Review.findById(reviewId).populate('author', '_id clerkId');
 
     if (!review) {
-        req.flash('error', 'Review not found.');
         return res.redirect(`/listings/${id}`);
     }
 
-    if (!review.author || !req.user || !review.author.equals(req.user._id)) {
-        req.flash('error', 'You are not allowed to delete this review.');
+    const clerkId = req.auth?.userId;
+    if (!review.author || !clerkId || review.author.clerkId !== clerkId) {
         return res.redirect(`/listings/${id}`);
     }
-
     next();
 }
 
 module.exports = authorize;
+module.exports.clerkAuthMiddleware = clerkAuthMiddleware;
+module.exports.authorize = authorize;
 module.exports.isListingOwner = isListingOwner;
 module.exports.isReviewAuthor = isReviewAuthor;
