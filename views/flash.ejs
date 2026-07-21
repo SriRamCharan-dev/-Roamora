@@ -1,13 +1,79 @@
-<% if (typeof success !== 'undefined' && success && success.length) { %>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <%= success %>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-<% } %>
+<style>
+    .flash-container {
+        position: fixed;
+        top: 24px;
+        right: 24px;
+        z-index: 1050;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        pointer-events: none;
+    }
 
-<% if (typeof error !== 'undefined' && error && error.length) { %>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <%= error %>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-<% } %>
+    .flash-toast {
+        min-width: 300px;
+        max-width: 400px;
+        padding: 16px 20px;
+        border-radius: 12px;
+        background: var(--surface-strong, #fff);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.05);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        pointer-events: auto;
+        animation: slideInRight 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .flash-toast.success {
+        border-left: 5px solid var(--brand-moss, #2f6a56);
+    }
+
+    .flash-toast.error {
+        border-left: 5px solid #d93838;
+    }
+
+    .flash-toast-content {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--brand-ink, #222);
+    }
+
+    .flash-toast-close {
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        color: var(--text-soft, #666);
+        cursor: pointer;
+        transition: color 0.2s;
+        margin-left: 12px;
+    }
+
+    .flash-toast-close:hover {
+        color: var(--brand-ink, #222);
+    }
+
+    @keyframes slideInRight {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+</style>
+
+<div class="flash-container">
+    <% if (typeof success !== 'undefined' && success && success.length) { %>
+        <div class="flash-toast success">
+            <div class="flash-toast-content">
+                <%= success %>
+            </div>
+            <button type="button" class="flash-toast-close" onclick="this.parentElement.style.display='none'">&times;</button>
+        </div>
+    <% } %>
+
+    <% if (typeof error !== 'undefined' && error && error.length) { %>
+        <div class="flash-toast error">
+            <div class="flash-toast-content">
+                <%= error %>
+            </div>
+            <button type="button" class="flash-toast-close" onclick="this.parentElement.style.display='none'">&times;</button>
+        </div>
+    <% } %>
+</div>
