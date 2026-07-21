@@ -9,7 +9,7 @@ Roamora is a design-forward, highly responsive full-stack accommodation discover
 *   **Smart Category Filters & Search**: Real-time client-side search filtering matched with custom property tags like 🏰 **Castles**, 🏊 **Amazing Pools**, ⛺ **Camping**, 🚜 **Farms**, ❄️ **Arctic**, 🔮 **Domes**, ⛵ **Boats**, and 🛏️ **Rooms**.
 *   **Bespoke Dark & Light Mode**: Smooth theme toggling styled with modern CSS variables, persisting client settings seamlessly in `localStorage`.
 *   **Interactive Reviews**: Dedicated rating stars and feedback card decks for every property.
-*   **Secure Authentication & Session Store**: Secured with username/password flows alongside **Google OAuth 2.0** login capabilities, running on a resilient MongoDB-backed session database using `connect-mongo`.
+*   **Secure Authentication & Session Store**: Secured with custom local username/password authentication, running on a resilient MongoDB-backed session database using `connect-mongo`.
 *   **Smart Routing**: Built-in authentication middleware to guarantee secure authorization for listing manipulation and listing ownership.
 *   **🎟️ Interactive Mock Booking System**: A fully animated, multi-state booking panel on every listing detail page:
     *   **Dynamic Price Calculator** — Total cost updates live as check-in/check-out dates are selected, reflecting exact nights, service fees, and grand totals.
@@ -27,7 +27,7 @@ Roamora is a design-forward, highly responsive full-stack accommodation discover
 *   **Backend**: Node.js, Express.js
 *   **Database**: MongoDB & Mongoose
 *   **Session Management**: `express-session`, `cookie-parser`, `connect-mongo` (Atlas-ready persistent session store)
-*   **Security & OAuth**: Passport.js, Passport-Local, Passport-Google-OAuth20
+*   **Security**: Custom local authentication and authorization middleware, `bcrypt` for password hashing
 *   **Template Engine**: EJS (with EJS-Mate layouts)
 *   **Styling**: Modern CSS3, responsive breakpoints, variable-based theme layers (no bloated libraries)
 
@@ -51,8 +51,6 @@ Create a `.env` file in the root directory:
 ```env
 ATLASDB_URL=mongodb+srv://<username>:<password>@cluster.mongodb.net/roamora?retryWrites=true&w=majority
 SESSION_SECRET=your_long_secure_session_secret
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
 CLOUD_API_KEY=your_cloudinary_key
 CLOUD_API_SECRET=your_cloudinary_secret
 CLOUD_NAME=your_cloudinary_name
@@ -94,6 +92,4 @@ In the **Environment** tab of your Render Web Service, add the following variabl
 *   `NODE_ENV` = `production`
 *   `ATLASDB_URL` = Your MongoDB Atlas Connection String
 *   `SESSION_SECRET` = A secure random string for signing sessions
-*   `GOOGLE_CLIENT_ID` = Google Cloud OAuth Client ID
-*   `GOOGLE_CLIENT_SECRET` = Google Cloud OAuth Client Secret
 *   *Note: Render will automatically bind to the dynamic port using `process.env.PORT`.*
