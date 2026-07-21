@@ -1,3 +1,6 @@
+// ⚠️ dotenv MUST be first before any other imports
+require('dotenv').config();
+
 const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
@@ -8,16 +11,23 @@ const engine = require('ejs-mate');
 const morgan = require('morgan');
 const session = require('express-session');
 const flash = require('connect-flash');
+const MongoStore = require('connect-mongo');
 
 const ExpressError = require('./utils/ExpressError');
 const listingRouter = require('./routes/listing');
 const reviewRoute = require('./routes/review');
 const userRouter = require('./routes/user');
+
+// Clerk — import AFTER dotenv so CLERK_SECRET_KEY is available
 const { ClerkExpressWithAuth } = require('@clerk/clerk-sdk-node');
 const { clerkAuthMiddleware } = require('./appMiddleware');
 
 // Trust Vercel's reverse proxy so HTTPS cookies work correctly
 app.set('trust proxy', 1);
+
+app.engine('ejs', engine);
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -25,13 +35,7 @@ app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(morgan('dev'));
 
-app.engine('ejs', engine);
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-require('dotenv').config();
-
 const dbUrl = process.env.ATLASDB_URL || 'mongodb://127.0.0.1:27017/airbnb';
-const { MongoStore } = require('connect-mongo');
 
 const store = MongoStore.create({
   mongoUrl: dbUrl,
@@ -41,8 +45,8 @@ const store = MongoStore.create({
   touchAfter: 24 * 3600
 });
 
-store.on("error", (err) => {
-  console.log("Error in Mongo Session Store:", err);
+store.on('error', (err) => {
+  console.log('Error in Mongo Session Store:', err);
 });
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -63,26 +67,18 @@ const sessionOptions = {
 app.use(session(sessionOptions));
 app.use(flash());
 
-// Clerk authentication middleware — safely populates req.auth on every request
-app.use((req, res, next) => {
-  try {
-    if (process.env.CLERK_SECRET_KEY || process.env.CLERK_API_KEY) {
-      return ClerkExpressWithAuth()(req, res, next);
-    }
-  } catch (err) {
-    console.error('Clerk middleware initialization error:', err.message);
-  }
-  req.auth = req.auth || {};
-  next();
-});
+// Clerk middleware — initialized ONCE (not per-request)
+app.use(ClerkExpressWithAuth());
 
-// Sync Clerk user to MongoDB and expose res.locals.currentUser to all views
+// Sync Clerk user to MongoDB, expose currentUser to all EJS views
 app.use(clerkAuthMiddleware);
 
 app.use((req, res, next) => {
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
-  res.locals.clerkPublishableKey = process.env.CLERK_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || '';
+  res.locals.clerkPublishableKey = process.env.CLERK_PUBLISHABLE_KEY
+    || process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+    || '';
   next();
 });
 
@@ -111,5 +107,5 @@ async function connectDB() {
 connectDB();
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port} you can check it at http://localhost:${port}`);
+  console.log(`Server is running on port ${port} → http://localhost:${port}`);
 });

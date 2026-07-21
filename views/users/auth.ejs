@@ -178,19 +178,20 @@
     </div>
 </div>
 
-<!-- Clerk JavaScript SDK -->
-<script async
-    crossorigin="anonymous"
-    data-clerk-publishable-key="<%= clerkPublishableKey %>"
+<!-- Clerk JS SDK — manual init (required for non-Clerk CDN) -->
+<script>window.__CLERK_PK = '<%= clerkPublishableKey %>';</script>
+<script
+    async
     src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
-    type="text/javascript"
+    onload="initClerk()"
+    crossorigin="anonymous"
 ></script>
 
 <script>
-    window.addEventListener('load', async () => {
-        if (!window.Clerk) return;
+    async function initClerk() {
+        const clerk = new window.Clerk(window.__CLERK_PK);
 
-        await window.Clerk.load({
+        await clerk.load({
             appearance: {
                 variables: {
                     colorPrimary: '#2f6a56',
@@ -201,33 +202,27 @@
                     fontFamily: "'Manrope', sans-serif",
                 },
                 elements: {
-                    card: 'box-shadow: none; border: none; padding: 0;',
+                    card: 'box-shadow: none; border: none; padding: 0; background: transparent;',
                     rootBox: 'width: 100%;',
                 }
             }
         });
 
-        // If user is already signed in, redirect immediately
-        if (window.Clerk.user) {
-            window.location.href = '/listings';
+        // Already signed in → go straight to listings
+        if (clerk.user) {
+            window.location.replace('/listings');
             return;
         }
 
-        const signInDiv = document.getElementById('clerk-sign-in');
-        window.Clerk.mountSignIn(signInDiv, {
+        clerk.mountSignIn(document.getElementById('clerk-sign-in'), {
             forceRedirectUrl: '/listings',
             fallbackRedirectUrl: '/listings',
-            signUpForceRedirectUrl: '/listings',
-            signUpFallbackRedirectUrl: '/listings',
             signUpUrl: '/signup',
-            signInUrl: '/login',
         });
 
-        // Listen for user session becoming active and redirect
-        window.Clerk.addListener(({ user }) => {
-            if (user) {
-                window.location.href = '/listings';
-            }
+        // Fallback listener in case forceRedirectUrl doesn't fire
+        clerk.addListener(({ user }) => {
+            if (user) window.location.replace('/listings');
         });
-    });
+    }
 </script>
