@@ -189,6 +189,7 @@
 <script>
     window.addEventListener('load', async () => {
         if (!window.Clerk) return;
+
         await window.Clerk.load({
             appearance: {
                 variables: {
@@ -206,12 +207,27 @@
             }
         });
 
+        // If user is already signed in, redirect immediately
+        if (window.Clerk.user) {
+            window.location.href = '/listings';
+            return;
+        }
+
         const signInDiv = document.getElementById('clerk-sign-in');
         window.Clerk.mountSignIn(signInDiv, {
-            afterSignInUrl: '/listings',
-            afterSignUpUrl: '/listings',
+            forceRedirectUrl: '/listings',
+            fallbackRedirectUrl: '/listings',
+            signUpForceRedirectUrl: '/listings',
+            signUpFallbackRedirectUrl: '/listings',
             signUpUrl: '/signup',
             signInUrl: '/login',
+        });
+
+        // Listen for user session becoming active and redirect
+        window.Clerk.addListener(({ user }) => {
+            if (user) {
+                window.location.href = '/listings';
+            }
         });
     });
 </script>
