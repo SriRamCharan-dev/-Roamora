@@ -2,11 +2,10 @@
 
 Roamora is a design-forward, highly responsive full-stack accommodation discovery platform inspired by Airbnb. It connects design-loving travelers with handpicked, character-filled stays across beaches, mountains, cities, castles, and domes.
 
-**🚀 Live Demo:** [https://roamora-two.vercel.app](https://roamora-two.vercel.app)
+**🚀 Live Demo:** [https://roamora-xi.vercel.app](https://roamora-xi.vercel.app)
 
 ---
 <img width="1920" height="2155" alt="screencapture-roamora-xi-vercel-app-2026-07-21-20_46_32" src="https://github.com/user-attachments/assets/72a3763a-8cd0-4ac5-a3a1-88a92195c8f0" />
-
 ---
 
 ## ✨ Premium Features
@@ -19,13 +18,29 @@ Roamora is a design-forward, highly responsive full-stack accommodation discover
 *   **Secure Authentication**: Local username/password authentication, resilient sessions via `connect-mongo`, and passwords cryptographically hashed with `bcrypt`.
 *   **Smart Routing**: Built-in authentication middleware to guarantee secure authorization for listing manipulation and listing ownership.
 *   **🎟️ Interactive Mock Booking System**: A fully animated, multi-state booking panel on every listing detail page.
-*   <img width="634" height="805" alt="Screenshot Capture - 2026-07-21 - 21-00-43" src="https://github.com/user-attachments/assets/2f96cf0e-54b4-4ce2-8a5c-733afefaeed7" />
-
 
 ---
 <img width="1920" height="4275" alt="screencapture-roamora-xi-vercel-app-listings-6a5d1302d7ac245d379a227a-2026-07-21-20_57_16" src="https://github.com/user-attachments/assets/ce4c11df-c2dd-4312-a696-25462581d00c" />
+---
+
+<details>
+<summary>📸 <strong>See more screenshots</strong> (Click to expand)</summary>
+<br>
+
+**Mock Booking System & Animations**
+<img width="634" height="805" alt="Screenshot Capture - 2026-07-21 - 21-00-43" src="https://github.com/user-attachments/assets/2f96cf0e-54b4-4ce2-8a5c-733afefaeed7" />
+
+**Dark Mode & Theme Toggling**
+<img width="1897" height="940" alt="Screenshot Capture - 2026-07-21 - 20-59-12" src="https://github.com/user-attachments/assets/b6038ae5-b553-4e8f-abd3-9bb95ce38439" />
+
+**Login & Authentication**
+<img width="1920" height="1579" alt="screencapture-roamora-xi-vercel-app-login-2026-07-21-20_58_08" src="https://github.com/user-attachments/assets/7cea7d3f-8e70-4223-b590-c827fd870cd3" />
+
+**Property Reviews & Map Integrations**
 <img width="1897" height="799" alt="Screenshot Capture - 2026-07-21 - 20-56-17" src="https://github.com/user-attachments/assets/a1fd8736-3209-4194-b150-54e2903159e6" />
 <img width="1867" height="775" alt="Screenshot Capture - 2026-07-21 - 20-56-31" src="https://github.com/user-attachments/assets/46aba615-e0c0-4364-ab1d-84567504a64d" />
+
+</details>
 
 ---
 
@@ -40,12 +55,17 @@ The architecture of Roamora follows a monolithic MVC (Model-View-Controller) des
 *   **Image Storage**: Cloudinary is used to securely upload and host listing images.
 *   **Styling**: Pure CSS (no heavy UI libraries), maintaining a lightweight bundle with a sophisticated, highly customizable UI.
 
----
-<img width="1920" height="4275" alt="screencapture-roamora-xi-vercel-app-listings-6a5d1302d7ac245d379a227a-2026-07-21-20_57_16" src="https://github.com/user-attachments/assets/3ac3db34-bd68-4e74-9225-145b27d5e779" />
+## 🚧 Known Limitations & Roadmap
+
+*   **Mock Booking**: The current booking system simulates checkout flows visually. Real payment integration (e.g., Stripe) is planned for a future release.
+*   **Testing**: Automated tests are not yet implemented. A comprehensive testing suite utilizing Jest and Supertest is on the roadmap.
+*   **Map Integration**: Advanced geocoding and interactive clustering using Mapbox are actively being refined.
 
 ---
 
 ## 🔌 API & Services
+
+Roamora exposes RESTful endpoints across listings, reviews, and authentication.
 
 ### **Third-Party Services Integration**
 *   **MongoDB Atlas**: Managed cloud database service used for persistent data storage.
@@ -73,9 +93,6 @@ The architecture of Roamora follows a monolithic MVC (Model-View-Controller) des
 *   `GET /login` - Renders the login form.
 *   `POST /login` - Authenticates user credentials and creates a session.
 *   `GET /logout` - Destroys the current user session.
-
----
-<img width="1920" height="1579" alt="screencapture-roamora-xi-vercel-app-login-2026-07-21-20_58_08" src="https://github.com/user-attachments/assets/7cea7d3f-8e70-4223-b590-c827fd870cd3" />
 
 ---
 
@@ -121,8 +138,6 @@ npm start
 ```
 Open **`http://localhost:5000`** in your browser.
 
----
-<img width="1897" height="940" alt="Screenshot Capture - 2026-07-21 - 20-59-12" src="https://github.com/user-attachments/assets/b6038ae5-b553-4e8f-abd3-9bb95ce38439" />
 ---
 
 ## 🚀 Deploying to Vercel
