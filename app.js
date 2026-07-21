@@ -70,10 +70,8 @@ app.use(flash());
 // Clerk middleware — initialized ONCE (not per-request)
 app.use(ClerkExpressWithAuth());
 
-// Sync Clerk user to MongoDB, expose currentUser to all EJS views
-app.use(clerkAuthMiddleware);
-
 app.use((req, res, next) => {
+  res.locals.currentUser = null;
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
   res.locals.clerkPublishableKey = process.env.CLERK_PUBLISHABLE_KEY
@@ -81,6 +79,9 @@ app.use((req, res, next) => {
     || '';
   next();
 });
+
+// Sync Clerk user to MongoDB, expose currentUser to all EJS views
+app.use(clerkAuthMiddleware);
 
 app.use('/listings', listingRouter);
 app.use('/listings/:id/reviews', reviewRoute);

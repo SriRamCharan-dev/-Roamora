@@ -208,7 +208,7 @@
             <a href="/listings/new" class="nav-icon-btn" aria-label="Create listing">
                 <i class="fa-solid fa-plus"></i>
             </a>
-            <% if (currentUser) { %>
+            <% if (typeof currentUser !== 'undefined' && currentUser) { %>
                 <a href="/logout" class="nav-logout-btn">
                     <i class="fa-solid fa-right-from-bracket"></i>
                     <span>Logout</span>
@@ -266,7 +266,7 @@
 
     <div class="mobile-menu-divider"></div>
 
-    <% if (currentUser) { %>
+    <% if (typeof currentUser !== 'undefined' && currentUser) { %>
         <a href="/logout" class="mobile-nav-link danger">
             <i class="fa-solid fa-right-from-bracket"></i> Logout
         </a>
