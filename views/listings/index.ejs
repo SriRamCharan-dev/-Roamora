@@ -375,7 +375,7 @@
 
                     if (matches) {
                         visibleCount++;
-                        card.style.display = 'flex';
+                        card.style.display = ''; // let CSS control display type
                         // Tiny delay for smooth fade in
                         setTimeout(() => {
                             card.style.opacity = '1';
@@ -424,7 +424,7 @@
 
                     if (matches) {
                         visibleCount++;
-                        card.style.display = 'flex';
+                        card.style.display = ''; // let CSS control display type
                         card.style.opacity = '1';
                     } else {
                         card.style.opacity = '0';

@@ -1131,6 +1131,24 @@ body.dark-mode .btn-google:hover {
       400px  — very small (iPhone SE etc.)
 ═══════════════════════════════════════════════════ */
 
+/* ── Global touch optimizations ─────────────────── */
+a, button, label, [role="button"] {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.listing-card {
+    -webkit-tap-highlight-color: rgba(47,106,86,0.1);
+}
+
+/* Ensure listing cards are always properly displayed in the grid */
+.listings-grid .listing-card {
+    display: block !important;
+}
+.listings-grid .listing-card[style*="display: none"] {
+    display: none !important;
+}
+
 /* ── 1280px – Minor desktop refinements ─────────── */
 @media (max-width: 1280px) {
     .detail-shell {
@@ -1450,40 +1468,45 @@ body.dark-mode .btn-google:hover {
         padding: 6px 12px;
     }
 
-    /* Cards: single column */
+    /* Cards: single full-width column — NO horizontal layout on mobile
+       The horizontal grid was causing the JS display:flex override to
+       break the grid and make cards untappable. Keep vertical layout. */
     .listings-grid {
         grid-template-columns: 1fr;
         gap: 14px;
     }
 
-    /* Listing card: horizontal layout on small screens */
+    /* Keep listing card as a vertical block — never horizontal on mobile */
     .listing-card {
-        display: grid;
-        grid-template-columns: 130px 1fr;
+        display: block !important;
         border-radius: 18px;
     }
     .listing-card-media {
-        aspect-ratio: unset;
-        min-height: 130px;
+        aspect-ratio: 4 / 3;
+        min-height: unset;
+        width: 100%;
     }
     .listing-card-body {
-        padding: 12px;
+        padding: 14px 14px 16px;
     }
     .listing-card-title {
-        font-size: 0.88rem;
+        font-size: 0.95rem;
     }
-    .listing-card-location,
-    .listing-card-meta {
-        font-size: 0.8rem;
+    .listing-card-location {
+        font-size: 0.82rem;
     }
     .listing-card-meta {
-        display: none; /* too much text in small layout */
+        display: none;
     }
     .listing-card-badge {
         font-size: 0.74rem;
         padding: 5px 9px;
         left: 10px;
         bottom: 10px;
+    }
+    /* Bigger tap target for card footer */
+    .listing-card-footer {
+        padding-bottom: 4px;
     }
 
     /* Detail page panels */
@@ -1515,6 +1538,15 @@ body.dark-mode .btn-google:hover {
         font-size: 1.4rem;
     }
 
+    /* Bigger minimum tap targets for booking inputs */
+    .booking-field {
+        min-height: 56px;
+    }
+    .booking-field input {
+        min-height: 44px;
+        font-size: 1rem;
+    }
+
     /* Forms */
     .form-panel {
         padding: 16px 14px;
@@ -1525,6 +1557,13 @@ body.dark-mode .btn-google:hover {
         padding: 18px;
         border-radius: 18px;
     }
+    /* Larger touch targets for form inputs */
+    .form-control,
+    .form-select,
+    .form-textarea {
+        min-height: 48px;
+        font-size: 16px; /* prevents iOS zoom on focus */
+    }
 
     /* Footer */
     .footer-brand {
@@ -1534,18 +1573,26 @@ body.dark-mode .btn-google:hover {
         font-size: 0.85rem;
     }
     .footer-social a {
-        width: 36px;
-        height: 36px;
+        width: 44px;
+        height: 44px;
     }
 
-    /* Review form */
+    /* Review form — bigger star touch targets */
     .star-rating label {
-        font-size: 1.4rem;
+        font-size: 1.8rem;
+        padding: 4px;
     }
 
     /* Page section padding */
     .page-section {
         padding: 16px 0 40px;
+    }
+
+    /* Buttons — minimum 44px tap target */
+    .btn-primary, .btn-secondary, .btn-ghost, .btn-danger {
+        min-height: 48px;
+        font-size: 0.95rem;
+        padding: 12px 20px;
     }
 }
 
@@ -1561,13 +1608,14 @@ body.dark-mode .btn-google:hover {
         font-size: 1.5rem;
     }
 
-    /* Even tighter card layout */
+    /* Keep card vertical — no horizontal grid on tiny screens */
     .listing-card {
-        grid-template-columns: 110px 1fr;
+        display: block !important;
         border-radius: 14px;
     }
     .listing-card-media {
-        min-height: 110px;
+        aspect-ratio: 4 / 3;
+        min-height: unset;
     }
 
     /* Booking price */
@@ -1577,13 +1625,19 @@ body.dark-mode .btn-google:hover {
 
     /* Buttons go full width */
     .btn-primary, .btn-secondary, .btn-ghost, .btn-danger {
-        font-size: 0.88rem;
-        padding: 11px 16px;
+        font-size: 0.9rem;
+        padding: 12px 18px;
+        min-height: 48px;
     }
 
     /* Smaller stat pills */
     .stat-pill strong { font-size: 0.9rem; }
     .stat-pill span   { font-size: 0.8rem; }
+
+    /* Prevent iOS input zoom — all inputs need 16px minimum */
+    input, select, textarea, .form-control, .form-select, .form-textarea {
+        font-size: 16px !important;
+    }
 }
 
 /* ── Utilities: always-good touches ─────────────── */

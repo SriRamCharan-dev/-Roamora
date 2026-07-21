@@ -82,16 +82,17 @@
 
             /* ── Mobile drawer ─────────────────────────────── */
             .mobile-menu-overlay {
-                display: none;
                 position: fixed;
                 inset: 0;
                 background: rgba(10,16,13,0.48);
                 z-index: 998;
                 opacity: 0;
+                display: none;
                 pointer-events: none;
                 transition: opacity 0.25s ease;
             }
             .mobile-menu-overlay.open { 
+                display: block;
                 opacity: 1; 
                 pointer-events: auto;
             }
@@ -190,7 +191,6 @@
                 .nav-search-form { display: none; }
                 .nav-links { display: none; }
                 .nav-hamburger { display: flex; }
-                .mobile-menu-overlay { display: block; }
             }
         </style>
 
