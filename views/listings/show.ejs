@@ -132,7 +132,7 @@
                     const listingLocation = "<%= listing.location %>";
                     const listingCountry = "<%= listing.country %>";
 
-                    let coordinates = <%- JSON.stringify(listing.geometry && listing.geometry.coordinates && listing.geometry.coordinates.length > 0 ? listing.geometry.coordinates : null) %>;
+                    let coordinates = JSON.parse('<%- JSON.stringify(listing.geometry && listing.geometry.coordinates && listing.geometry.coordinates.length > 0 ? listing.geometry.coordinates : null) %>');
 
                     // If coordinates are missing or default, attempt to geocode using the specific listing location
                     if (!coordinates || (coordinates[0] === 77.2090 && coordinates[1] === 28.6139)) {
@@ -466,7 +466,7 @@
 
             <script>
                 document.addEventListener("DOMContentLoaded", () => {
-                    const pricePerNight = <%= listing.price %>;
+                    const pricePerNight = Number("<%= listing.price || 0 %>");
                     const checkinInput = document.getElementById("checkin");
                     const checkoutInput = document.getElementById("checkout");
                     const guestsSelect = document.getElementById("guests");
