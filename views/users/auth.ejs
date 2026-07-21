@@ -188,19 +188,20 @@
         }
         
         try {
-            // Extract the base64 encoded domain from the publishable key
             const parts = clerkPubKey.split('_');
             const encodedDomain = parts[parts.length - 1];
             const decodedDomain = atob(encodedDomain).replace(/\$$/, '');
             
             const script = document.createElement('script');
+            script.setAttribute('data-clerk-publishable-key', clerkPubKey);
             script.src = `https://${decodedDomain}/npm/@clerk/clerk-js@latest/dist/clerk.browser.js`;
             script.async = true;
             script.crossOrigin = 'anonymous';
+            
             script.onload = async () => {
                 if (!window.Clerk) return;
-                const clerk = new window.Clerk(clerkPubKey);
-                await clerk.load({
+                
+                await window.Clerk.load({
                     appearance: {
                         variables: {
                             colorPrimary: '#2f6a56',
@@ -217,22 +218,25 @@
                     }
                 });
 
-                if (clerk.user) {
+                if (window.Clerk.user) {
                     window.location.replace('/listings');
                     return;
                 }
 
-                clerk.mountSignIn(document.getElementById('clerk-sign-in'), {
-                    forceRedirectUrl: '/listings',
-                    fallbackRedirectUrl: '/listings',
-                    signUpUrl: '/signup',
-                });
+                const container = document.getElementById('clerk-sign-in');
+                if (container) {
+                    window.Clerk.mountSignIn(container, {
+                        forceRedirectUrl: '/listings',
+                        fallbackRedirectUrl: '/listings',
+                        signUpUrl: '/signup',
+                    });
+                }
 
-                clerk.addListener(({ user }) => {
+                window.Clerk.addListener(({ user }) => {
                     if (user) window.location.replace('/listings');
                 });
             };
-            document.body.appendChild(script);
+            document.head.appendChild(script);
         } catch (e) {
             console.error('Error loading Clerk:', e);
         }
