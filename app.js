@@ -20,6 +20,9 @@ const passportLocalMongoose = require('passport-local-mongoose');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('./Models/user');
 
+// Trust Vercel's reverse proxy so HTTPS cookies work correctly
+app.set('trust proxy', 1);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
@@ -52,15 +55,18 @@ function verifyToken(req, res, next) {
   if (token === verified) return next();
   return next(new ExpressError(401, 'ACCESS DENIED!'));
 }
+const isProduction = process.env.NODE_ENV === 'production';
 const sessionoptions = {
   store: store,
   secret: process.env.SESSION_SECRET || 'mysupersecretstring',
   resave: false,
   saveUninitialized: true,
   cookie: {
-    expires: Date.now() + 1000 * 60 * 60 * 24 * 3,
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 3),
     maxAge: 1000 * 60 * 60 * 24 * 3,
     httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax',
   }
 }
 //these should be declared before the routes
