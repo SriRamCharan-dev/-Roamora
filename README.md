@@ -2,6 +2,10 @@
 
 Roamora is a design-forward, highly responsive full-stack accommodation discovery platform inspired by Airbnb. It connects design-loving travelers with handpicked, character-filled stays across beaches, mountains, cities, castles, and domes.
 
+---
+
+---
+
 ## ✨ Premium Features
 
 *   **Responsive Multi-Device Layout**: Fully optimized with a bespoke 5-breakpoint layout engine spanning desktop, tablet, and mobile (featuring an interactive sliding mobile drawer navigation with animated hamburger-to-close toggles).
@@ -11,26 +15,58 @@ Roamora is a design-forward, highly responsive full-stack accommodation discover
 *   **Interactive Reviews**: Dedicated rating stars and feedback card decks for every property.
 *   **Secure Authentication & Session Store**: Secured with custom local username/password authentication, running on a resilient MongoDB-backed session database using `connect-mongo`.
 *   **Smart Routing**: Built-in authentication middleware to guarantee secure authorization for listing manipulation and listing ownership.
-*   **🎟️ Interactive Mock Booking System**: A fully animated, multi-state booking panel on every listing detail page:
-    *   **Dynamic Price Calculator** — Total cost updates live as check-in/check-out dates are selected, reflecting exact nights, service fees, and grand totals.
-    *   **Input Validation & Shake Animation** — Missing or invalid dates trigger an error banner and a smooth CSS shake animation on the form card.
-    *   **3-Step Loading Sequence** — Clicking "Reserve now" transitions the panel into an animated stepper showing spinning progress icons for: availability check → price lock → token generation.
-    *   **Booking Confirmation Screen** — On completion, a drawing checkmark SVG animation reveals a confirmation card with a random booking ID, selected dates, guest count, and total price.
-    *   **Confetti Burst** — Colorful confetti pieces rain down on successful mock booking.
-    *   **Reset Flow** — A "Cancel / Reset" button returns the panel to its initial state cleanly.
-
+*   **🎟️ Interactive Mock Booking System**: A fully animated, multi-state booking panel on every listing detail page.
 
 ---
+*(Add App Screenshot Here - Listings/Filter Page)*
+---
 
-## 🛠️ Tech Stack
+## 🛠️ Our Approach & Architecture
 
-*   **Backend**: Node.js, Express.js
-*   **Database**: MongoDB & Mongoose
-*   **Session Management**: `express-session`, `cookie-parser`, `connect-mongo` (Atlas-ready persistent session store)
-*   **Security**: Custom local authentication and authorization middleware, `bcrypt` for password hashing
-*   **Template Engine**: EJS (with EJS-Mate layouts)
-*   **Styling**: Modern CSS3, responsive breakpoints, variable-based theme layers (no bloated libraries)
+The architecture of Roamora follows a monolithic MVC (Model-View-Controller) design pattern. The application uses server-side rendering (SSR) via EJS, combined with modern vanilla JavaScript on the frontend for interactive elements (such as dark mode toggling and mobile menus).
 
+*   **Backend**: Node.js and Express.js handle all the routing, server logic, and middleware integrations.
+*   **Database**: MongoDB via Mongoose ORM. Data is normalized across `Users`, `Listings`, and `Reviews` with cross-references.
+*   **Session Management**: Express-session with persistent MongoDB storage (`connect-mongo`).
+*   **Security**: Passwords are cryptographically hashed using `bcrypt`. Route protection is enforced via custom authorization middleware, ensuring users can only edit/delete their own listings and reviews.
+*   **Image Storage**: Cloudinary is used to securely upload and host listing images.
+*   **Styling**: Pure CSS (no heavy UI libraries), maintaining a lightweight bundle with a sophisticated, highly customizable UI.
+
+---
+*(Add App Screenshot Here - Single Listing / Booking Page)*
+---
+
+## 🔌 API & Services
+
+### **Third-Party Services Integration**
+*   **MongoDB Atlas**: Managed cloud database service used for persistent data storage.
+*   **Cloudinary**: Cloud-based image management service for uploading, storing, and serving high-resolution listing images.
+*   **Render**: (Or Vercel) Cloud application hosting platform for seamless deployment.
+
+### **Core API Routes**
+
+#### **Listings (`/listings`)**
+*   `GET /listings` - Fetches and displays all available property listings.
+*   `GET /listings/new` - Renders the form to create a new property listing.
+*   `POST /listings` - Creates a new listing (Requires Authentication & Image Upload).
+*   `GET /listings/:id` - Shows detailed information for a specific listing, including reviews and booking panel.
+*   `GET /listings/:id/edit` - Renders the form to edit an existing listing (Requires Listing Owner).
+*   `PUT /listings/:id` - Updates the details of a specific listing (Requires Listing Owner).
+*   `DELETE /listings/:id` - Deletes a specific listing and its associated reviews (Requires Listing Owner).
+
+#### **Reviews (`/listings/:id/reviews`)**
+*   `POST /listings/:id/reviews` - Adds a new review and rating to a listing (Requires Authentication).
+*   `DELETE /listings/:id/reviews/:reviewId` - Deletes a specific review (Requires Review Owner).
+
+#### **User Authentication (`/`)**
+*   `GET /signup` - Renders the registration form.
+*   `POST /signup` - Registers a new user and logs them in.
+*   `GET /login` - Renders the login form.
+*   `POST /login` - Authenticates user credentials and creates a session.
+*   `GET /logout` - Destroys the current user session.
+
+---
+*(Add App Screenshot Here - Login / Signup Page)*
 ---
 
 ## ⚙️ How to Run Locally
@@ -71,10 +107,12 @@ node init/update-images.js
 
 ### 5. Run the Application
 ```bash
-nodemon app.js
+npm start
 ```
 Open **`http://localhost:5000`** in your browser.
 
+---
+*(Add App Screenshot Here - Dark Mode / Theme Toggling)*
 ---
 
 ## 🚀 Deploying to Render
