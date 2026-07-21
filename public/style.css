@@ -36,8 +36,19 @@ body.dark-mode {
     --shadow-card: 0 18px 40px rgba(0, 0, 0, 0.34);
 }
 
+/* Critical mobile touch reset */
+html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    overflow-x: clip;
+}
+
 * {
     box-sizing: border-box;
+    /* Eliminate 300ms tap delay on Android Chrome */
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 body {
@@ -49,6 +60,9 @@ body {
         radial-gradient(circle at top right, rgba(47, 106, 86, 0.12), transparent 24%),
         linear-gradient(180deg, #fffaf2 0%, #f8f1e6 100%);
     min-height: 100vh;
+    /* Critical: NEVER set overflow:hidden on body - it breaks touch on Android/iOS */
+    overflow-x: clip;
+    -webkit-overflow-scrolling: touch;
 }
 
 body.dark-mode {
@@ -203,6 +217,12 @@ body.dark-mode .roamora-footer {
 
 main {
     min-height: calc(100vh - 180px);
+}
+
+/* When mobile drawer is open, prevent page scroll without breaking touch */
+html.drawer-open {
+    overflow: hidden;
+    touch-action: none;
 }
 
 a {
@@ -1644,14 +1664,4 @@ a, button, label, [role="button"] {
 img {
     max-width: 100%;
     height: auto;
-}
-
-/* Smooth scroll for anchor links */
-html {
-    scroll-behavior: smooth;
-}
-
-/* Prevent overflow on any screen size */
-body {
-    overflow-x: hidden;
 }

@@ -298,19 +298,29 @@
             hamburger.setAttribute('aria-expanded', 'true');
             overlay.classList.add('open');
             drawer.classList.add('open');
-            document.body.style.overflow = 'hidden';
+            // Use class not inline style — easier to clean up
+            document.documentElement.classList.add('drawer-open');
         }
         function closeDrawer() {
             hamburger.classList.remove('open');
             hamburger.setAttribute('aria-expanded', 'false');
             overlay.classList.remove('open');
             drawer.classList.remove('open');
-            document.body.style.overflow = '';
+            document.documentElement.classList.remove('drawer-open');
         }
 
         hamburger.addEventListener('click', openDrawer);
         closeBtn.addEventListener('click', closeDrawer);
         overlay.addEventListener('click', closeDrawer);
+
+        // Safety net: clean up on any touch outside drawer
+        document.addEventListener('touchstart', function(e) {
+            if (drawer.classList.contains('open') && 
+                !drawer.contains(e.target) && 
+                !hamburger.contains(e.target)) {
+                closeDrawer();
+            }
+        }, { passive: true });
 
         // Sync mobile theme icon with current state
         if (document.body.classList.contains('dark-mode')) {
