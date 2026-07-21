@@ -63,8 +63,18 @@ const sessionOptions = {
 app.use(session(sessionOptions));
 app.use(flash());
 
-// Clerk authentication middleware — populates req.auth on every request
-app.use(ClerkExpressWithAuth());
+// Clerk authentication middleware — safely populates req.auth on every request
+app.use((req, res, next) => {
+  try {
+    if (process.env.CLERK_SECRET_KEY || process.env.CLERK_API_KEY) {
+      return ClerkExpressWithAuth()(req, res, next);
+    }
+  } catch (err) {
+    console.error('Clerk middleware initialization error:', err.message);
+  }
+  req.auth = req.auth || {};
+  next();
+});
 
 // Sync Clerk user to MongoDB and expose res.locals.currentUser to all views
 app.use(clerkAuthMiddleware);
@@ -72,7 +82,7 @@ app.use(clerkAuthMiddleware);
 app.use((req, res, next) => {
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
-  res.locals.clerkPublishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || '';
+  res.locals.clerkPublishableKey = process.env.CLERK_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || '';
   next();
 });
 
